@@ -20,6 +20,7 @@
 namespace TbGdprModule;
 
 use Module;
+use TbGdpr;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -38,22 +39,22 @@ class Tools
     public static function defaultConsentSettings()
     {
         return [
-            'TBGDPR_POSITION'   => 1,
-            'TBGDPR_LAYOUT'     => 3,
-            'TBGDPR_BANNER'     => '#000000',
-            'TBGDPR_BANNERTXT'  => '#ffffff',
-            'TBGDPR_BUTTON'     => '#f1d600',
-            'TBGDPR_BUTTONTXT'  => '#000000',
-            'TBGDPR_LEARNMORE'  => [
+            TbGdpr::DISPLAY_POSITION            => 1,
+            TbGdpr::DISPLAY_LAYOUT              => 3,
+            TbGdpr::DISPLAY_PALETTE_BANNER      => '#000000',
+            TbGdpr::DISPLAY_PALETTE_BANNER_TEXT => '#ffffff',
+            TbGdpr::DISPLAY_PALETTE_BUTTON      => '#f1d600',
+            TbGdpr::DISPLAY_PALETTE_BUTTON_TEXT => '#000000',
+            TbGdpr::DISPLAY_LEARN_MORE_LINK     => [
                 'en' => 'http://cookies.insites.com/',
             ],
-            'TBGDPR_MESSAGETXT' => [
+            TbGdpr::DISPLAY_MESSAGE_TEXT        => [
                 'en' => 'By using this site you agree to our privacy settings.',
             ],
-            'TBGDPR_DISMISSTXT' => [
+            TbGdpr::DISPLAY_DISMISS_TEXT        => [
                 'en' => 'Got it!',
             ],
-            'TBGDPR_POLICYTXT'  => [
+            TbGdpr::DISPLAY_POLICY_TEXT         => [
                 'en' => 'Learn more',
             ],
         ];

@@ -45,6 +45,9 @@ class TbGdpr extends Module
     const DISPLAY_PALETTE_BUTTON = 'TBGDPR_BUTTON';
     const DISPLAY_PALETTE_BUTTON_TEXT = 'TBGDPR_BUTTONTXT';
     const DISPLAY_LEARN_MORE_LINK = 'TBGDPR_LEARNMORE';
+    const DISPLAY_MESSAGE_TEXT = 'TBGDPR_MESSAGETXT';
+    const DISPLAY_DISMISS_TEXT = 'TBGDPR_DISMISSTXT';
+    const DISPLAY_POLICY_TEXT = 'TBGDPR_POLICYTXT';
 
     const ANONYMOUS_ENABLED = 'TBGDPR_ANONYMOUS_ENABLED';
     const ANONYMOUS_TEXT = 'TBGDPR_ANONYMOUS_TEXT';
@@ -325,21 +328,21 @@ class TbGdpr extends Module
             static::DISPLAY_PALETTE_BUTTON      => Configuration::get(static::DISPLAY_PALETTE_BUTTON),
             static::DISPLAY_PALETTE_BUTTON_TEXT => Configuration::get(static::DISPLAY_PALETTE_BUTTON_TEXT),
             static::DISPLAY_LEARN_MORE_LINK     => Configuration::get(static::DISPLAY_LEARN_MORE_LINK),
-            static::ANONYMOUS_ENABLED           => Configuration::getInt(static::ANONYMOUS_ENABLED),
+            static::ANONYMOUS_ENABLED           => (bool) Configuration::get(static::ANONYMOUS_ENABLED),
             static::ANONYMOUS_TEXT              => Configuration::getInt(static::ANONYMOUS_TEXT),
-            static::INFORMED_ENABLED            => Configuration::getInt(static::INFORMED_ENABLED),
+            static::INFORMED_ENABLED            => (bool) Configuration::get(static::INFORMED_ENABLED),
             static::INFORMED_TEXT               => Configuration::getInt(static::INFORMED_TEXT),
-            static::CORRECTED_ENABLED           => Configuration::getInt(static::CORRECTED_ENABLED),
+            static::CORRECTED_ENABLED           => (bool) Configuration::get(static::CORRECTED_ENABLED),
             static::CORRECTED_TEXT              => Configuration::getInt(static::CORRECTED_TEXT),
-            static::NOTIFICATION_ENABLED        => Configuration::getInt(static::NOTIFICATION_ENABLED),
+            static::NOTIFICATION_ENABLED        => (bool) Configuration::get(static::NOTIFICATION_ENABLED),
             static::NOTIFICATION_TEXT           => Configuration::getInt(static::NOTIFICATION_TEXT),
-            static::OBJECT_ENABLED              => Configuration::getInt(static::OBJECT_ENABLED),
+            static::OBJECT_ENABLED              => (bool) Configuration::get(static::OBJECT_ENABLED),
             static::OBJECT_TEXT                 => Configuration::getInt(static::OBJECT_TEXT),
-            static::RESTRICT_ENABLED            => Configuration::getInt(static::RESTRICT_ENABLED),
+            static::RESTRICT_ENABLED            => (bool) Configuration::get(static::RESTRICT_ENABLED),
             static::RESTRICT_TEXT               => Configuration::getInt(static::RESTRICT_TEXT),
-            static::DATAPORTABILITY_ENABLED     => Configuration::getInt(static::DATAPORTABILITY_ENABLED),
+            static::DATAPORTABILITY_ENABLED     => (bool) Configuration::get(static::DATAPORTABILITY_ENABLED),
             static::DATAPORTABILITY_TEXT        => Configuration::getInt(static::DATAPORTABILITY_TEXT),
-            static::FORGOTTEN_ENABLED           => Configuration::getInt(static::FORGOTTEN_ENABLED),
+            static::FORGOTTEN_ENABLED           => (bool) Configuration::get(static::FORGOTTEN_ENABLED),
             static::FORGOTTEN_TEXT              => Configuration::getInt(static::FORGOTTEN_TEXT),
             static::FORGOTTEN_AUTO              => Configuration::getInt(static::FORGOTTEN_AUTO),
         ];
@@ -402,7 +405,6 @@ class TbGdpr extends Module
         if (Tools::isSubmit('submitSettings')) {
             $languageIds = Language::getLanguages(false, null, true);
             $options = array_merge(
-                $this->getConsentModalOptions()['form']['input'],
                 $this->getRightToBeAnonymousForm()['form']['input'],
                 $this->getRightToBeInformedForm()['form']['input'],
                 $this->getRightToCorrectInformationForm()['form']['input'],
@@ -770,16 +772,15 @@ class TbGdpr extends Module
      */
     protected static function isGdprEnabled()
     {
-        return true;
-
-        return (bool) array_sum(Configuration::getMultiple([
+        return (bool) array_sum(array_values(Configuration::getMultiple([
             static::ANONYMOUS_ENABLED,
             static::CORRECTED_ENABLED,
             static::DATAPORTABILITY_ENABLED,
-            static::INFORMED_ENABLED,
             static::NOTIFICATION_ENABLED,
             static::OBJECT_ENABLED,
             static::RESTRICT_ENABLED,
-        ]));
+            static::INFORMED_ENABLED,
+            static::FORGOTTEN_ENABLED,
+        ])));
     }
 }
