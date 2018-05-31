@@ -19,7 +19,10 @@
 
 namespace TbGdprModule;
 
+use Adapter_Exception;
 use Module;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use TbGdpr;
 
 if (!defined('_PS_VERSION_')) {
@@ -71,11 +74,11 @@ class Tools
     {
         try {
             $modules = Module::getModulesOnDisk(true);
-        } catch (\Adapter_Exception $e) {
+        } catch (Adapter_Exception $e) {
             return [];
-        } catch (\PrestaShopDatabaseException $e) {
+        } catch (PrestaShopDatabaseException $e) {
             return [];
-        } catch (\PrestaShopException $e) {
+        } catch (PrestaShopException $e) {
             return [];
         }
         foreach ($modules as $index => &$module) {
