@@ -29,6 +29,7 @@ use HelperForm;
 use Language;
 use Configuration;
 use TbGdprModule\Tools as GdprTools;
+use Translate;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -342,13 +343,13 @@ trait Forms
                         'values'  => [
                             [
                                 'id'    => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Yes'),
+                                'value' => true,
+                                'label' => Translate::getAdminTranslation('Enabled', 'AdminCarriers'),
                             ],
                             [
                                 'id'    => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('No'),
+                                'value' => false,
+                                'label' => Translate::getAdminTranslation('Disabled', 'AdminCarriers'),
                             ],
                         ],
                     ],
@@ -430,17 +431,18 @@ trait Forms
                         'type' => 'switch',
                         'label' => $this->l('Enable this tool'),
                         'name' => static::FORGOTTEN_ENABLED,
-                        'values' => [
+                        'is_bool' => true,
+                        'values'  => [
                             [
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Yes')
+                                'id'    => 'active_on',
+                                'value' => true,
+                                'label' => Translate::getAdminTranslation('Enabled', 'AdminCarriers'),
                             ],
                             [
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('No')
-                            ]
+                                'id'    => 'active_off',
+                                'value' => false,
+                                'label' => Translate::getAdminTranslation('Disabled', 'AdminCarriers'),
+                            ],
                         ],
                     ],
                     [
@@ -518,17 +520,18 @@ trait Forms
                         'type' => 'switch',
                         'label' => $this->l('Enable this tool'),
                         'name' => static::CORRECTED_ENABLED,
-                        'values' => [
+                        'is_bool' => true,
+                        'values'  => [
                             [
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Yes')
+                                'id'    => 'active_on',
+                                'value' => true,
+                                'label' => Translate::getAdminTranslation('Enabled', 'AdminCarriers'),
                             ],
                             [
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('No')
-                            ]
+                                'id'    => 'active_off',
+                                'value' => false,
+                                'label' => Translate::getAdminTranslation('Disabled', 'AdminCarriers'),
+                            ],
                         ],
                     ],
                     [
@@ -609,17 +612,18 @@ trait Forms
                         'type' => 'switch',
                         'label' => $this->l('Enable this tool'),
                         'name' => static::NOTIFICATION_ENABLED,
-                        'values' => [
+                        'is_bool' => true,
+                        'values'  => [
                             [
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Yes')
+                                'id'    => 'active_on',
+                                'value' => true,
+                                'label' => Translate::getAdminTranslation('Enabled', 'AdminCarriers'),
                             ],
                             [
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('No')
-                            ]
+                                'id'    => 'active_off',
+                                'value' => false,
+                                'label' => Translate::getAdminTranslation('Disabled', 'AdminCarriers'),
+                            ],
                         ],
                     ],
                     [
@@ -700,17 +704,18 @@ trait Forms
                         'type' => 'switch',
                         'label' => $this->l('Enable this tool'),
                         'name' => static::OBJECT_ENABLED,
-                        'values' => [
+                        'is_bool' => true,
+                        'values'  => [
                             [
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Yes')
+                                'id'    => 'active_on',
+                                'value' => true,
+                                'label' => Translate::getAdminTranslation('Enabled', 'AdminCarriers'),
                             ],
                             [
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('No')
-                            ]
+                                'id'    => 'active_off',
+                                'value' => false,
+                                'label' => Translate::getAdminTranslation('Disabled', 'AdminCarriers'),
+                            ],
                         ],
                     ],
                     [
@@ -791,17 +796,18 @@ trait Forms
                         'type' => 'switch',
                         'label' => $this->l('Enable this tool'),
                         'name' => static::RESTRICT_ENABLED,
-                        'values' => [
+                        'is_bool' => true,
+                        'values'  => [
                             [
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Yes')
+                                'id'    => 'active_on',
+                                'value' => true,
+                                'label' => Translate::getAdminTranslation('Enabled', 'AdminCarriers'),
                             ],
                             [
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('No')
-                            ]
+                                'id'    => 'active_off',
+                                'value' => false,
+                                'label' => Translate::getAdminTranslation('Disabled', 'AdminCarriers'),
+                            ],
                         ],
                     ],
                     [
@@ -880,17 +886,18 @@ trait Forms
                         'type' => 'switch',
                         'label' => $this->l('Enable this tool'),
                         'name' => static::FORGOTTEN_ENABLED,
-                        'values' => [
+                        'is_bool' => true,
+                        'values'  => [
                             [
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Yes')
+                                'id'    => 'active_on',
+                                'value' => true,
+                                'label' => Translate::getAdminTranslation('Enabled', 'AdminCarriers'),
                             ],
                             [
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('No')
-                            ]
+                                'id'    => 'active_off',
+                                'value' => false,
+                                'label' => Translate::getAdminTranslation('Disabled', 'AdminCarriers'),
+                            ],
                         ],
                     ],
                     [
@@ -899,17 +906,18 @@ trait Forms
                         'name' => static::FORGOTTEN_AUTO,
                         'hint' => $this->l('Give permission before an account will be removed?'),
                         'desc' => $this->l('Default: Yes'),
-                        'values' => [
+                        'is_bool' => true,
+                        'values'  => [
                             [
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Yes')
+                                'id'    => 'active_on',
+                                'value' => true,
+                                'label' => Translate::getAdminTranslation('Enabled', 'AdminCarriers'),
                             ],
                             [
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('No')
-                            ]
+                                'id'    => 'active_off',
+                                'value' => false,
+                                'label' => Translate::getAdminTranslation('Disabled', 'AdminCarriers'),
+                            ],
                         ],
                     ],
                     [
@@ -1044,6 +1052,24 @@ trait Forms
                 ],
                 'description' => $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/dataportability/desc.tpl'),
                 'input'  => [
+                    [
+                        'type' => 'switch',
+                        'label' => $this->l('Enable this tool'),
+                        'name' => static::DATAPORTABILITY_ENABLED,
+                        'is_bool' => true,
+                        'values'  => [
+                            [
+                                'id'    => 'active_on',
+                                'value' => true,
+                                'label' => Translate::getAdminTranslation('Enabled', 'AdminCarriers'),
+                            ],
+                            [
+                                'id'    => 'active_off',
+                                'value' => false,
+                                'label' => Translate::getAdminTranslation('Disabled', 'AdminCarriers'),
+                            ],
+                        ],
+                    ],
                     [
                         'type'         => 'textarea',
                         'label'        => $this->l('Right to data portability', 'Forms'),
