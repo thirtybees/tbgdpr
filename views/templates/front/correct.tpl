@@ -20,11 +20,11 @@
   <span class="navigation-pipe">{$navigationPipe}</span>
   <a href="{$link->getModuleLink('tbgdpr', 'overview')|escape:'html':'UTF-8'}">{l s='Privacy Tools' mod='tbgdpr'}</a>
   <span class="navigation-pipe">{$navigationPipe}</span>
-  <span class="navigation_page">{l s='Right to correct information' mod='tbgdpr'}</span>
+  <span class="navigation_page">{l s='Right to rectification' mod='tbgdpr'}</span>
 {/capture}
 
 {block name='page_content'}
-  <h1 class="page-heading">{l s='Right to correct information' mod='tbgdpr'}</h1>
+  <h1 class="page-heading">{l s='Right to rectification' mod='tbgdpr'}</h1>
   <div>
     {$tbgdpr_corrected nofilter}
   </div>

@@ -534,6 +534,15 @@ trait Forms
                             ],
                         ],
                     ],
+                    [
+                        'type'         => 'textarea',
+                        'label'        => $this->l('Right to rectification', 'Forms'),
+                        'hint'         => $this->l('Content displayed on the Right to rectification page', 'Forms'),
+                        'name'         => static::CORRECTED_TEXT,
+                        'required'     => false,
+                        'lang'         => true,
+                        'autoload_rte' => false,
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->l('Save', 'Forms'),
