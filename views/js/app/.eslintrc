@@ -1,0 +1,40 @@
+{
+  "globals": {
+    "If": true,
+    "Choose": true,
+    "For": true,
+    "When": true,
+    "Otherwise": true
+  },
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "consistent-return": "off",
+    "eqeqeq": "off",
+    "no-empty": "off",
+    "no-undef": "off",
+    "no-plusplus": "off",
+    "max-len": [
+      "error",
+      300
+    ],
+    "no-nested-ternary": "off",
+    "no-param-reassign": "off",
+    "arrow-parens": "off",
+    "arrow-body-style": [
+      "off",
+      "always"
+    ],
+    "operator-assignment": "off",
+    "class-methods-use-this": "off",
+    "react/prefer-stateless-function": "off",
+    "react/forbid-prop-types": "off",
+    "react/jsx-boolean-value": "off",
+    "jsx-a11y/label-has-for": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/img-has-alt": "off"
+  }
+}

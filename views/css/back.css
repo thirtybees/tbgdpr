@@ -1,0 +1,55 @@
+div.sidebar.navigation a.active > span.badge-module-tabs {
+    background-color: #ffffff !important;
+}
+
+.tbgdpr-tab-first {
+    font-weight: 700;
+}
+
+.tbgdpr-tab-first:not(:hover) {
+    background-color: #fafafa;
+}
+
+.panel.module-container {
+    border-radius: 0!important;
+}
+
+.panel.module-card {
+    width: 120px;
+    height: 120px;
+    padding: 0!important;
+    align-content: center;
+    cursor: pointer;
+    -webkit-transition: opacity 0.2s ease-in-out;
+    -moz-transition: opacity 0.2s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
+    border-radius: 0;
+    background: #fafafa!important;
+}
+
+.panel.module-card:hover {
+    opacity: 0.6;
+}
+
+.panel.module-card > .panel-body {
+    max-width: 100px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.panel.module-card > .panel-footer {
+    height: 20px;
+    margin: -10px 0 0 0;
+    padding: 5px 0 0 0;
+    text-align: center;
+    overflow: hidden!important;
+    text-overflow: ellipsis!important;
+}
+
+.panel.module-card > .panel-footer > .small {
+    margin: -10px auto 0 auto;
+    height: 10px;
+    white-space: nowrap;
+    font-weight: 700;
+    background-color: transparent;
+}
