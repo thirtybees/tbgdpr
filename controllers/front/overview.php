@@ -55,7 +55,7 @@ class TbGdprOverviewModuleFrontController extends ModuleFrontController
      */
     public function getBlocks()
     {
-        return [
+        $blocks = [
             'informed' => [
                 'title'       => $this->module->l('Data Sharing', 'overview'),
                 'description' => $this->module->l('On this page you can find the list of our data partners.', 'overview'),
@@ -113,5 +113,24 @@ class TbGdprOverviewModuleFrontController extends ModuleFrontController
                 'icon'        => 'shield',
             ],
         ];
+
+        $enabledBlocks = [
+            'informed'        => Configuration::get(TbGdpr::INFORMED_ENABLED),
+            'correct'         => Configuration::get(TbGdpr::CORRECTED_ENABLED),
+            'anonymous'       => Configuration::get(TbGdpr::ANONYMOUS_ENABLED),
+            'restrict'        => Configuration::get(TbGdpr::RESTRICT_ENABLED),
+            'object'          => Configuration::get(TbGdpr::OBJECT_ENABLED),
+            'notification'    => Configuration::get(TbGdpr::NOTIFICATION_ENABLED),
+            'dataportability' => Configuration::get(TbGdpr::DATAPORTABILITY_ENABLED),
+            'removedata'      => Configuration::get(TbGdpr::FORGOTTEN_ENABLED),
+        ];
+
+        foreach ($blocks as $index => $block) {
+            if (!$enabledBlocks[$index]) {
+                unset($blocks[$index]);
+            }
+        }
+
+        return $blocks;
     }
 }
