@@ -268,12 +268,6 @@ class TbGdpr extends Module
                     'value' => $this->displayRightToBeForgottenForm(),
                     'badge' => '',
                 ],
-                [
-                    'name'  => $this->l('Customer data'),
-                    'icon'  => dot($this->getCustomerDataForm())->get('form.legend.icon'),
-                    'value' => $this->displayCustomerDataForm(),
-                    'badge' => '',
-                ],
             ],
             'restrict'  => [
                 'main'          => [
