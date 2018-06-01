@@ -1,0 +1,6 @@
+Dear Customer,
+
+You have requested to opt-out from all of our marketing communication. Please click the link below to confirm your request:
+{link}
+
+{shop_name}

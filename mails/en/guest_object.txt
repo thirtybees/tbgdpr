@@ -1,6 +1,0 @@
-Dear Customer,
-
-You have objected to direct marketing puposes. Please click the link below to confirm your request:
-{link}
-
-{shop_name}

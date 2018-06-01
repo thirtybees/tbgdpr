@@ -1,0 +1,31 @@
+<mjml>
+  <mj-head>
+    <mj-title>${{ lang.unsubscribe_from_our_marketing }}$</mj-title>
+    <mj-include path="./partials/header.mjml"/>
+  </mj-head>
+  <mj-body mj-class="body">
+    <mj-spacer height="25px"></mj-spacer>
+    <mj-section mj-class="section">
+      <mj-column width="100%">
+        <mj-include path="./partials/logo.mjml"/>
+        <mj-text mj-class="title">${{ lang.unsubscribe_from_our_marketing }}$</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section mj-class="section">
+      <mj-text>${{ lang.dear_customer }}$,</mj-text>
+    </mj-section>
+    <mj-section mj-class="section">
+      <mj-column mj-class="background-hero">
+        <mj-text mj-class="title-hero">${{ lang.you_have_requested_to_optout_marketing }}$</mj-text>
+        <mj-divider mj-class="title-divider-hero" />
+          <mj-text>${{ lang.please_click_the_button_below_to_confirm }}$:</mj-text>
+          <mj-button mj-class="request-button" border-radius="0" font-size="14pt" font-family="Helvetica" background-color="#555454" color="white" padding="10px 20px" href="{link}">
+            ${{ lang.unsubscribe }}$ ›
+          </mj-button>
+        <mj-spacer height="20px" />
+      </mj-column>
+    </mj-section>
+
+    <mj-include path="./partials/footer.mjml"/>
+  </mj-body>
+</mjml>

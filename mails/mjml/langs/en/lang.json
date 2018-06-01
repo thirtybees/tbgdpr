@@ -1,0 +1,10 @@
+{
+  "hi_firstname_lastname": "Hi {firstname} {lastname}",
+  "dear_customer": "Dear Customer",
+  "unsubscribe_from_our_marketing": "Unsubscribe from our marketing",
+  "shop_name_powered_by_prestashop": "<a href=\"{shop_url}\">{shop_name}</a>",
+  "kind_regards": "Kind regards",
+  "you_have_requested_to_optout_marketing": "You have requested to opt-out from all of our marketing communication",
+  "please_click_the_button_below_to_confirm": "Please click the button below to confirm your request",
+  "unsubscribe": "Unsubscribe"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "ps-mails-sdk",
+  "version": "1.0.0",
+  "description": "PrestaShop emails SDK",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp watch"
+  },
+  "author": "PrestaShop",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-download-stream": "~0.0.19",
+    "gulp-ext-replace": "^0.3.0",
+    "gulp-html-i18n": "^0.13.0",
+    "gulp-mjml": "^3.0.0",
+    "gulp-rename": "^1.2.3",
+    "gulp-replace": "^1.0.0",
+    "gulp-replace-task": "^0.11.0",
+    "gulp-zip": "^4.1.0",
+    "vinyl-buffer": "^1.0.1"
+  }
+}

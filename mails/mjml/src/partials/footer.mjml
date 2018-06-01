@@ -1,0 +1,11 @@
+<mj-section mj-class="section">
+  <mj-text>${{ lang.kind_regards }}$,</mj-text>
+  <mj-text>{shop_name}</mj-text>
+</mj-section>
+
+<mj-section background-color="white" padding="5px 20px">
+  <mj-column>
+    <mj-divider mj-class="divider" padding="10px 0px"></mj-divider>
+    <mj-text padding="0px">${{ lang.shop_name_powered_by_prestashop }}$</mj-text>
+    <mj-column>
+</mj-section>
