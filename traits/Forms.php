@@ -24,6 +24,7 @@ use PrestaShopException;
 use SmartyException;
 use ReflectionClass;
 use ReflectionException;
+use TbGdprRequest;
 use Tools;
 use HelperForm;
 use Language;
@@ -933,6 +934,72 @@ trait Forms
                     'title' => $this->l('Save', 'Forms'),
                     'class' => 'btn btn-default pull-right',
                     'name'  => 'tbgdprsubmit',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return string
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws SmartyException
+     * @throws ReflectionException
+     */
+    public function displayPendingRemovalRequestsForm()
+    {
+        $helper = new HelperForm();
+        $helper->show_toolbar = false;
+        $helper->table = $this->table;
+        $helper->module = $this;
+        $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        $helper->default_form_language = $lang->id;
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?: 0;
+        $this->fields_form = [];
+
+        $helper->identifier = $this->identifier;
+        $helper->submit_action = 'submitSettings';
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
+            .'&'.http_build_query([
+                'configure'   => $this->name,
+                'tab_module'  => $this->tab,
+                'module_name' => $this->name,
+            ]);
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->tpl_vars = [
+            'fields_value' => $this->getConfigFieldsValues(),
+            'languages'    => $this->context->controller->getLanguages(),
+            'id_language'  => $this->context->language->id,
+        ];
+
+        return $helper->generateForm([$this->getPendingRemovalRequestsForm()]);
+    }
+
+    /**
+     * @return array
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws \Adapter_Exception
+     *
+     * @since 1.0.0
+     */
+    public function getPendingRemovalRequestsForm()
+    {
+        return [
+            'form' => [
+                'legend' => [
+                    'title' => $this->l('Pending removal requests', 'Forms'),
+                    'icon'  => 'icon-user',
+                ],
+                'input'  => [
+                    [
+                        'type'     => 'pending_removal_requests',
+                        'label'    => $this->l('Requests'),
+                        'name'     => '',
+                        'requests' => TbGdprRequest::getRequestsForForm(),
+                    ],
                 ],
             ],
         ];

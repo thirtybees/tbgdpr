@@ -26,6 +26,8 @@
     {include file="./module_csp_manual.tpl"}
   {elseif $input.type === 'compliant_modules'}
     {include file="./module_compliant_modules.tpl"}
+  {elseif $input.type === 'pending_removal_requests'}
+    {include file="./module_pending_removal_requests.tpl"}
   {else}
     {$smarty.block.parent}
   {/if}

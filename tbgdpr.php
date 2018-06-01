@@ -30,6 +30,7 @@ class TbGdpr extends Module
 {
     use \TbGdprModule\Installation;
     use \TbGdprModule\Forms;
+    use \TbGdprModule\AdminAjax;
 
     const CONSENT_FUNCTIONAL = 'functional';
     const CONSENT_ANALYTICS = 'analytics';
@@ -174,12 +175,13 @@ class TbGdpr extends Module
             'availableShops' => Shop::isFeatureActive()
                 ? Shop::getShops(true, null, true)
                 : [$this->context->shop->id => $this->context->shop->id],
-            'exportUrl'      => $this->baseUrl,
+            'baseUrl'        => $this->baseUrl,
             'moduleName'     => $this->name,
         ]);
         $this->context->controller->addCSS($this->_path.'views/css/back.css', 'screen');
         $this->context->controller->addJS($this->_path.'views/js/sweetalert.min.js');
         $this->context->controller->addJS($this->_path.'views/js/popover.js');
+        $this->context->controller->addJS($this->_path.'views/js/back.js');
         $this->context->controller->addCSS($this->_path.'views/css/popover.css', 'screen');
         $this->loadTabs();
 
@@ -266,6 +268,12 @@ class TbGdpr extends Module
                     'name'  => dot($this->getRightToBeForgottenForm())->get('form.legend.title'),
                     'icon'  => dot($this->getRightToBeForgottenForm())->get('form.legend.icon'),
                     'value' => $this->displayRightToBeForgottenForm(),
+                    'badge' => '',
+                ],
+                [
+                    'name'  => dot($this->getPendingRemovalRequestsForm())->get('form.legend.title'),
+                    'icon'  => dot($this->getPendingRemovalRequestsForm())->get('form.legend.icon'),
+                    'value' => $this->displayPendingRemovalRequestsForm(),
                     'badge' => '',
                 ],
             ],

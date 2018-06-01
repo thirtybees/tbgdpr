@@ -96,8 +96,8 @@ class TbGdprRequest extends TbGdprObjectModel
         $result = true;
         switch ($this->request_type) {
             case static::REQUEST_TYPE_REMOVE_DATA:
-                $customer = new Customer($this->context->customer->id);
-                $result = Hook::exec('actionDeleteGdprCustomer', $customer);
+                $customer = new Customer($this->id_customer);
+                $result = Hook::exec('actionDeleteGdprCustomer', ['email' => $customer->email, 'id_customer' => $customer->id, 'id_guest' => $customer->id_guest]);
                 break;
         }
 
@@ -105,6 +105,38 @@ class TbGdprRequest extends TbGdprObjectModel
         $this->save();
 
         return $result;
+    }
+
+    /**
+     * Approve request
+     *
+     * @return bool
+     *
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public function approve()
+    {
+        $this->status = static::STATUS_APPROVED;
+
+        return $this->save();
+    }
+
+    /**
+     * Deny request
+     *
+     * @return bool
+     *
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public function deny()
+    {
+        $this->status = static::STATUS_DENIED;
+
+        return $this->save();
     }
 
     /**
@@ -131,6 +163,53 @@ class TbGdprRequest extends TbGdprObjectModel
         }
 
         return parent::add($autoDate, $nullValues);
+    }
+
+    /**
+     * Get requests for form
+     *
+     * @param int            $type
+     * @param null|int|int[] $idShops
+     *
+     * @return array
+     * @throws Adapter_Exception
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public static function getRequestsForForm($type = self::REQUEST_TYPE_REMOVE_DATA, $idShops = null)
+    {
+        if (is_string($idShops) || is_int($idShops)) {
+            $idShops = [(int) $idShops];
+        } elseif (!is_array($idShops) || empty($idShops)) {
+            $idShops = Shop::getContextListShopID(Shop::SHARE_CUSTOMER);
+        }
+
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            (new DbQuery())
+                ->select('r.*, c.*')
+                ->from(bqSQL(static::$definition['table']), 'r')
+                ->leftJoin(bqSQL(Customer::$definition['table']), 'c', 'c.`id_customer` = r.`id_customer`')
+                ->where('r.`request_type` = '.(int) $type)
+                ->where('r.`id_shop` IN ('.implode(',', array_map('intval', $idShops)).')')
+        );
+        if (!is_array($results)) {
+            return [];
+        }
+
+        $requests = [];
+        foreach ($results as $result) {
+            $request = new static();
+            $request->hydrate($result);
+            $request->customer = new Customer();
+            if ($result['firstname']) {
+                $request->customer->hydrate($result);
+            }
+            $requests[] = $request;
+        }
+
+        return $requests;
     }
 
     /**

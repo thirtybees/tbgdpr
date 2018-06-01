@@ -55,6 +55,10 @@
 <script type="text/javascript" src="{$new_base_dir|escape:'htmlall':'UTF-8'}views/js/configtabs.js"></script>
 <script type="text/javascript">
   (function() {
+    window.TbGdprModule = window.TbGdprModule || { };
+    window.TbGdprModule.urls = window.TbGdprModule.urls || { };
+    window.TbGdprModule.urls.base = '{$baseUrl|escape:'javascript':'UTF-8'}';
+
     function getStyleRuleValue(style, selector) {
       for (var i = 0; i < document.styleSheets.length; i++) {
         var mysheet = document.styleSheets[i];
@@ -91,7 +95,7 @@
         return;
       }
 
-      window.TbGdprModule = window.TbGdprModule | { };
+      window.TbGdprModule = window.TbGdprModule || { };
       window.TbGdprModule.tabs = new window.ConfigTabs(document.querySelector('#main'));
       initializeDynamicStyle();
     }
