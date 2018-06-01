@@ -32,36 +32,34 @@
   {$tbgdpr_forgotten|escape:'htmlall':'UTF-8'}
 </div>
 
-{if !Validate::isLoadedObject($tbgdpr_request)}
 <form method="post" action="{$link->getModuleLink('tbgdpr', 'removedata', [], true)|escape:'htmlall':'UTF-8'}">
   <input type="hidden"
          name="csrf"
          value="{$csrf|escape:'html':'UTF-8'}"
   >
-
-  <div class="required form-group form-ok">
-    <label for="accept-gdpr-remove">
-      <input id="accept-gdpr-remove"
-             name="accept-gdpr-remove"
-             type="checkbox"
-             value="1"
-      >
-      &nbsp;{l s='I confirm that I want to have my account and personal data removed from this shop and understand that this action is irreversible' mod='tbgdpr'}
-    </label>
-
-  </div>
-{/if}
-{if $tbgdpr_request->status === TbGdprRequest::STATUS_PENDING}
-  <input class="btn btn-danger"
-         name="cancel-gdpr-remove"
-         type="submit"
-         value="{l s='Cancel request' mod='tbgdpr'}"
-  >
-{else}
-  <input class="btn btn-danger"
-         name="gdpr-remove"
-         type="submit"
-         value="{l s='Delete my account' mod='tbgdpr'}"
-  >
-{/if}
+  {if !Validate::isLoadedObject($tbgdpr_request)}
+    <div class="required form-group form-ok">
+      <label for="accept-gdpr-remove">
+        <input id="accept-gdpr-remove"
+               name="accept-gdpr-remove"
+               type="checkbox"
+               value="1"
+        >
+        &nbsp;{l s='I confirm that I want to have my account and personal data removed from this shop and understand that this action is irreversible' mod='tbgdpr'}
+      </label>
+    </div>
+  {/if}
+  {if $tbgdpr_request->status == TbGdprRequest::STATUS_PENDING}
+    <input class="btn btn-danger"
+           name="cancel-gdpr-remove"
+           type="submit"
+           value="{l s='Cancel request' mod='tbgdpr'}"
+    >
+  {else}
+    <input class="btn btn-danger"
+           name="gdpr-remove"
+           type="submit"
+           value="{l s='Delete my account' mod='tbgdpr'}"
+    >
+  {/if}
 </form>

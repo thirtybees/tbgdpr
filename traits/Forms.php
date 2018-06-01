@@ -430,7 +430,7 @@ trait Forms
                     [
                         'type' => 'switch',
                         'label' => $this->l('Enable this tool'),
-                        'name' => static::FORGOTTEN_ENABLED,
+                        'name' => static::INFORMED_ENABLED,
                         'is_bool' => true,
                         'values'  => [
                             [
@@ -903,9 +903,8 @@ trait Forms
                     [
                         'type' => 'switch',
                         'label' => $this->l('Confirm account removal'),
-                        'name' => static::FORGOTTEN_AUTO,
-                        'hint' => $this->l('Give permission before an account will be removed?'),
-                        'desc' => $this->l('Default: Yes'),
+                        'name' => static::FORGOTTEN_NEEDS_CONFIRM,
+                        'hint' => $this->l('Does the user need permission before the account is removed?'),
                         'is_bool' => true,
                         'values'  => [
                             [

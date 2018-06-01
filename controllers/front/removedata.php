@@ -83,14 +83,14 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
                     $request->email = $this->context->customer->email;
 
                     $request->request_type = TbGdprRequest::REQUEST_TYPE_REMOVE_DATA;
-                    $request->status = Configuration::get(TbGdpr::FORGOTTEN_AUTO)
+                    $request->status = Configuration::get(TbGdpr::FORGOTTEN_NEEDS_CONFIRM)
                         ? TbGdprRequest::STATUS_PENDING
                         : TbGdprRequest::STATUS_APPROVED;
                     $request->comment = '';
 
                     $request->add();
 
-                    if (Configuration::get(TbGdpr::FORGOTTEN_AUTO)) {
+                    if (!Configuration::get(TbGdpr::FORGOTTEN_NEEDS_CONFIRM)) {
                         $result = $request->execute();
                         if ($result) {
                             $this->confirmations[] = $this->module->l('Your personal data has been removed');
@@ -106,10 +106,13 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
             }
         } elseif (Tools::getValue('cancel-gdpr-remove')) {
             if (!$this->isTokenValid()) {
-                die('An error occurred');
+                $this->errors[] = $this->module->l('Unable to confirm request', 'removedata');
+                return;
             }
-            if (Tools::getValue('accept-remove')) {
-            }
+            $request = TbGdprRequest::getRemovalRequestForGuest($this->context->cookie->id_guest);
+            $request->delete();
+
+            $this->confirmations[] = $this->module->l('Your request has been canceled', 'removedata');
         }
     }
 

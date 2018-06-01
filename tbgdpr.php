@@ -72,7 +72,7 @@ class TbGdpr extends Module
     
     const FORGOTTEN_ENABLED = 'TBGDPR_FORGOTTEN_ENABLED';
     const FORGOTTEN_TEXT = 'TBGDPR_FORGOTTEN_TEXT';
-    const FORGOTTEN_AUTO = 'TBGDPR_FORGOTTEN_AUTO';
+    const FORGOTTEN_NEEDS_CONFIRM = 'TBGDPR_FORGOTTEN_AUTO';
 
     const TAB_MAIN = 1;
     const TAB_COOKIE = 2;
@@ -330,13 +330,13 @@ class TbGdpr extends Module
             static::NOTIFICATION_TEXT           => Configuration::getInt(static::NOTIFICATION_TEXT),
             static::OBJECT_ENABLED              => (bool) Configuration::get(static::OBJECT_ENABLED),
             static::OBJECT_TEXT                 => Configuration::getInt(static::OBJECT_TEXT),
-            static::RESTRICT_ENABLED            => (bool) Configuration::get(static::RESTRICT_ENABLED),
-            static::RESTRICT_TEXT               => Configuration::getInt(static::RESTRICT_TEXT),
-            static::DATAPORTABILITY_ENABLED     => (bool) Configuration::get(static::DATAPORTABILITY_ENABLED),
-            static::DATAPORTABILITY_TEXT        => Configuration::getInt(static::DATAPORTABILITY_TEXT),
-            static::FORGOTTEN_ENABLED           => (bool) Configuration::get(static::FORGOTTEN_ENABLED),
-            static::FORGOTTEN_TEXT              => Configuration::getInt(static::FORGOTTEN_TEXT),
-            static::FORGOTTEN_AUTO              => Configuration::getInt(static::FORGOTTEN_AUTO),
+            static::RESTRICT_ENABLED        => (bool) Configuration::get(static::RESTRICT_ENABLED),
+            static::RESTRICT_TEXT           => Configuration::getInt(static::RESTRICT_TEXT),
+            static::DATAPORTABILITY_ENABLED => (bool) Configuration::get(static::DATAPORTABILITY_ENABLED),
+            static::DATAPORTABILITY_TEXT    => Configuration::getInt(static::DATAPORTABILITY_TEXT),
+            static::FORGOTTEN_ENABLED       => (bool) Configuration::get(static::FORGOTTEN_ENABLED),
+            static::FORGOTTEN_NEEDS_CONFIRM => (bool) Configuration::get(static::FORGOTTEN_NEEDS_CONFIRM),
+            static::FORGOTTEN_TEXT          => Configuration::getInt(static::FORGOTTEN_TEXT),
         ];
     }
 
