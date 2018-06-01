@@ -18,8 +18,8 @@
 <div class="container">
 {l s='Under the General Data Protection Regulation (GDPR) you have the obligation to provide information.' mod='tbgdpr'}<br>
 {l s='This means that you are obliged to clearly inform new and existing customers about what you do with their personal data.' mod='tbgdpr'}<br><br>
-  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#collapse">{l s='Read More' mod='tbgdpr'}</button>
-  <div id="collapse" class="collapse"><br>
+  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#informed">{l s='Read More' mod='tbgdpr'}</button>
+  <div id="informed" class="collapse"><br>
 {l s='An online privacy statement is the most convenient way to comply with this.' mod='tbgdpr'}<br>
 {l s='Accountability applies as well under the GDPR. This means that you must be able to demonstrate that you comply with the GDPR.' mod='tbgdpr'}<br>
 {l s='You should be able to show that you have informed people properly about the processing of their personal data. You can use your privacy statement for this.' mod='tbgdpr'}<br>
