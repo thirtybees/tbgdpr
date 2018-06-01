@@ -52,10 +52,10 @@ trait Installation
      */
     public function install()
     {
-        include(__DIR__.'/../sql/install.php');
-
         $this->installFrontControllerOverride();
         $this->installDefaultSettings();
+
+        \TbGdprRequest::createDatabase();
 
         return parent::install() &&
             $this->registerHook('header') &&
@@ -77,8 +77,6 @@ trait Installation
      */
     public function uninstall()
     {
-        @include(__DIR__.'/../sql/uninstall.php');
-
         $this->uninstallFrontControllerOverride();
 
         return parent::uninstall();

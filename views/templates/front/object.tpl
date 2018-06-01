@@ -27,7 +27,7 @@
 {block name='page_content'}
   <h1 class="page-heading">{l s='Unsubscribe' mod='tbgdpr'}</h1>
   <div>
-    {$tbgdpr_object nofilter}
+    {$tbgdpr_object}
   </div>
   {if $status == 'pending'}
     <div class="alert alert-danger" role="alert">

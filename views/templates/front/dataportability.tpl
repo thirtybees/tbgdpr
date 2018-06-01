@@ -27,7 +27,7 @@
 {block name='page_content'}
   <h1 class="page-heading">{l s='Right to data portability' mod='tbgdpr'}</h1>
   <div>
-    {$tbgdpr_portability nofilter}
+    {$tbgdpr_portability}
   </div>
   {if $tbgdpr_status == 'approved'}
     <div class="alert alert-warning" role="alert">

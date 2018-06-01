@@ -34,6 +34,7 @@ class TbGdprOverviewModuleFrontController extends ModuleFrontController
     /**
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @throws Adapter_Exception
      */
     public function initContent()
     {
@@ -42,7 +43,7 @@ class TbGdprOverviewModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign([
             'tbgdpr_page_top' => Configuration::get('TB_GDPR_TOP'),
             'tbgdpr_blocks'   => $this->getBlocks(),
-            'tbgdpr_request'  => TbGdprRequest::getRequests(),
+            'tbgdpr_request'  => TbGdprRequest::getRequestsForGuest($this->context->cookie->id_guest),
         ]);
 
         $this->addCSS($this->module->getLocalPath().'views/css/front.css');

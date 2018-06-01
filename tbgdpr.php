@@ -206,6 +206,12 @@ class TbGdpr extends Module
                     'value' => $this->displayDataSecurityForm(),
                     'badge' => '',
                 ],
+                [
+                    'name'  => $this->l('Customer requests'),
+                    'icon'  => 'icon-user',
+                    'value' => $this->displayConsentModalForm(),
+                    'badge' => '',
+                ],
             ],
             'anonymous' => [
                 [
@@ -279,14 +285,6 @@ class TbGdpr extends Module
                 'cookie_policy' => [
                     'name'  => $this->l('Privacy policy'),
                     'icon'  => 'icon-list-ul',
-                    'value' => $this->displayConsentModalForm(),
-                    'badge' => '',
-                ],
-            ],
-            'requests' => [
-                'customer_requests' => [
-                    'name'  => $this->l('Customer requests'),
-                    'icon'  => 'icon-user',
                     'value' => $this->displayConsentModalForm(),
                     'badge' => '',
                 ],

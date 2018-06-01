@@ -44,6 +44,7 @@ div.sidebar.navigation a.active > span.badge-module-tabs {
     text-align: center;
     overflow: hidden!important;
     text-overflow: ellipsis!important;
+    background-color: transparent!important;
 }
 
 .panel.module-card > .panel-footer > .small {
