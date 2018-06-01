@@ -15,8 +15,11 @@
  * @copyright 2018 thirty bees
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
+<div class="container">
 {l s='Article 17 of the General Data Protection Regulation (GDPR) includes the so-called right to be forgotten.' mod='tbgdpr'}<br>
-{l s='This right means that in a number of cases organizations have to erase personal data if a data subject (the person whose data is processed) requests it.' mod='tbgdpr'}<br>
+{l s='This right means that in a number of cases organizations have to erase personal data if a data subject (the person whose data is processed) requests it.' mod='tbgdpr'}<br><br>
+  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#forgotten">{l s='Read More' mod='tbgdpr'}</button>
+  <div id="forgotten" class="collapse"><br>
 {l s='The right to be forgotten does not always apply.' mod='tbgdpr'}<br>
 {l s='Only in the following situations is the right to be forgotten applicable:' mod='tbgdpr'}<br>
 {l s='- No longer necessary.' mod='tbgdpr'}<br>
@@ -47,3 +50,5 @@
 {l s='Inform people about the right to be forgotten. People can send a request to be forgotten from the right to be forgotten account block.' mod='tbgdpr'}<br>
 {l s='You can eighter automate this process, or you can give your approval first.' mod='tbgdpr'}<br>
 {l s='Disclaimer: This is merely informative and not legal advice.' mod='tbgdpr'}
+</div>
+</div>
