@@ -18,7 +18,7 @@
 <div class="col-lg-3 col-md-4 col-sm-6" style="padding: 0 5px">
   <a href="{$block.link|escape:'htmlall':'UTF-8'}" style="text-decoration: none">
     <div class="panel gdpr-overview-panel">
-      <div class="panel-heading">
+      <div class="panel-heading  gdpr-overview-panel-heading">
         <i class="icon icon-{$block.icon|escape:'html':'UTF-8'}" style="font-size: 50px"></i>
         <h3 class="link-item text-uppercase">
           {$block.title|escape:'htmlall':'UTF-8'}
