@@ -24,24 +24,15 @@
 {/capture}
 
 {include file="./misc/errors.tpl"}
+{include file="./misc/warnings.tpl"}
 {include file="./misc/confirmations.tpl"}
 
 <h1 class="page-heading">{l s='Right to be forgotten' mod='tbgdpr'}</h1>
 <div>
   {$tbgdpr_forgotten|escape:'htmlall':'UTF-8'}
 </div>
-{if $tbgdpr_request->status === TbGdprRequest::STATUS_DENIED}
-  <div class="alert alert-danger" role="alert">
-    {l s='Your request has been denied. Reason:' mod='tbgdpr'}<br/>
-    {$tbgdpr_comment|escape:'htmlall':'UTF-8'}
-  </div>
-{elseif $tbgdpr_request->status === TbGdprRequest::STATUS_PENDING}
-  <div class="alert alert-warning" role="alert">
-    {l s='Your request has been sent, it will be processed soon.' mod='tbgdpr'}
-  </div>
-{else}
 
-{/if}
+{if !Validate::isLoadedObject($tbgdpr_request)}
 <form method="post" action="{$link->getModuleLink('tbgdpr', 'removedata', [], true)|escape:'htmlall':'UTF-8'}">
   <input type="hidden"
          name="csrf"
@@ -59,18 +50,18 @@
     </label>
 
   </div>
-
-  {if $tbgdpr_request->status === TbGdprRequest::STATUS_PENDING}
-    <input class="btn btn-danger"
-           name="cancel-gdpr-remove"
-           type="submit"
-           value="{l s='Cancel request' mod='tbgdpr'}"
-    >
-  {else}
-    <input class="btn btn-danger"
-           name="gdpr-remove"
-           type="submit"
-           value="{l s='Delete Account' mod='tbgdpr'}"
-    >
-  {/if}
+{/if}
+{if $tbgdpr_request->status === TbGdprRequest::STATUS_PENDING}
+  <input class="btn btn-danger"
+         name="cancel-gdpr-remove"
+         type="submit"
+         value="{l s='Cancel request' mod='tbgdpr'}"
+  >
+{else}
+  <input class="btn btn-danger"
+         name="gdpr-remove"
+         type="submit"
+         value="{l s='Delete my account' mod='tbgdpr'}"
+  >
+{/if}
 </form>

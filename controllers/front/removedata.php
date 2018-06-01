@@ -34,6 +34,8 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
     protected $table_name = 'tbgdpr_requests';
     /** @var array $confirmations */
     public $confirmations = [];
+    /** @var array $warnings */
+    public $warnings = [];
 
     /**
      * @throws PrestaShopDatabaseException
@@ -49,6 +51,7 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign([
             'csrf'             => Tools::getToken('removedata'),
             'confirmations'    => $this->confirmations,
+            'warnings'         => $this->warnings,
             'errors'           => $this->errors,
             'tbgdpr_request'   => TbGdprRequest::getRemovalRequestForGuest($this->context->cookie->id_guest),
             'tbgdpr_forgotten' => Configuration::getInt(TbGdpr::FORGOTTEN_TEXT)[$this->context->language->id],
@@ -69,7 +72,8 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
         //submit removal request
         if (Tools::isSubmit('gdpr-remove')) {
             if (!$this->isTokenValid()) {
-                die('An error occured');
+                $this->errors[] = $this->module->l('Unable to confirm request', 'removedata');
+                return;
             }
             if (Tools::getValue('accept-gdpr-remove')) {
                 if (!Validate::isLoadedObject(TbGdprRequest::getRemovalRequestForGuest($this->context->customer->id))) {
@@ -93,46 +97,18 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
                         } else {
                             $this->errors[] = $this->module->l('An error has occurred. Please contact customer support');
                         }
+                    } else {
+                        $this->confirmations[] = $this->module->l('You request has been received and will be processed as soon as possible', 'removedata');
                     }
                 }
             } else {
-//                $customerData = [];
-//                $customerData['type'] = 'removal';
-//                if (Configuration::get('TBGDPR_FORGOTTEN_AUTO' == 1)) {
-//                    $customerData['status'] = 'pending';
-//                } else {
-//                    $customerData['status'] = 'removed';
-//                }
-//                $customerData['comment'] = '';
-//                $customerData['date_updated'] = time();
-//                $this->updateGdprRemovalRequest($customerData);
-//
-//                if (Configuration::get('TBGDPR_FORGOTTEN_AUTO' != 1)) {
-//
-//                    $customer = new Customer($this->context->customer->id);
-//                    $result = Hook::exec('actionDeleteGdprCustomer', $customer);
-//
-//                    if ($result == true) {
-//                        $this->confirmations[] = $this->module->l('Your personal data has been removed');
-//                    } else {
-//                        $this->errors[] = $this->module->l('An error has occurred. Please contact customer support');
-//                    }
-//                }
+                $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to request your data to be removed', 'removedata');
             }
-        }
-
-        //submit cancel removal request
-        if (Tools::getValue('cancel-gdpr-remove')) {
+        } elseif (Tools::getValue('cancel-gdpr-remove')) {
             if (!$this->isTokenValid()) {
                 die('An error occurred');
             }
             if (Tools::getValue('accept-remove')) {
-//                $customerData = [];
-//                $customerData['type'] = 'removal';
-//                $customerData['status'] = 'canceled';
-//                $customerData['comment'] = '';
-//                $customerData['date_updated'] = time();
-//                $this->updateGdprRemovalRequest($customerData);
             }
         }
     }

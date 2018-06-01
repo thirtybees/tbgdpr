@@ -49,10 +49,10 @@ class TbGdprRequest extends TbGdprObjectModel
     public $comment;
     /** @var int $id_shop */
     public $id_shop;
-    /** @var string $data_add */
-    public $data_add;
-    /** @var string $data_upd */
-    public $data_upd;
+    /** @var string $date_add */
+    public $date_add;
+    /** @var string $date_upd */
+    public $date_upd;
 
     /**
      * @see ObjectModel::$definition
@@ -86,10 +86,10 @@ class TbGdprRequest extends TbGdprObjectModel
      */
     public function execute($force = false)
     {
-        if (!$this->status === static::STATUS_APPROVED) {
+        if ($this->status !== static::STATUS_APPROVED) {
             return false;
         }
-        if (!$this->executed && !$force) {
+        if ($this->executed && !$force) {
             return true;
         }
 
@@ -184,7 +184,7 @@ class TbGdprRequest extends TbGdprObjectModel
                 ->select('*')
                 ->from(bqSQL(static::$definition['table']))
                 ->where('`id_guest` = '.(int) $idGuest.' '.Shop::addSqlRestriction())
-                ->where('`request_type` = '.(int) static::REQUEST_TYPE_GET_DATA)
+                ->where('`request_type` = '.(int) static::REQUEST_TYPE_REMOVE_DATA)
         );
 
         $request = new static();
