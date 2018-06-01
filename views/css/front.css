@@ -5,6 +5,10 @@
     padding: 5px;
 }
 
+.gdpr-overview-panel-heading {
+    min-height: 150px;
+}
+
 .gdpr-overview-panel-btn-container {
     display: inline-block;
     position: absolute;
