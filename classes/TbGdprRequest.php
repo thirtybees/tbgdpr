@@ -28,6 +28,7 @@ class TbGdprRequest extends TbGdprObjectModel
 {
     const REQUEST_TYPE_GET_DATA = 1;
     const REQUEST_TYPE_REMOVE_DATA = 2;
+    const REQUEST_TYPE_OBJECT = 3;
     
     const STATUS_PENDING = 1;
     const STATUS_APPROVED = 2;
