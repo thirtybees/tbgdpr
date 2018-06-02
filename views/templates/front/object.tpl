@@ -15,7 +15,6 @@
  * @copyright 2018 thirty bees
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-
 {capture name=path}
   <a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">{l s='My account' mod='tbgdpr'}</a>
   <span class="navigation-pipe">{$navigationPipe}</span>
@@ -24,77 +23,108 @@
   <span class="navigation_page">{l s='Unsubscribe' mod='tbgdpr'}</span>
 {/capture}
 
-{block name='page_content'}
-  <h1 class="page-heading">{l s='Unsubscribe' mod='tbgdpr'}</h1>
-  <div>
-    {$tbgdpr_object}
-  </div>
-  {if $status == 'pending'}
-    <div class="alert alert-danger" role="alert">
-      {l s='We have sent an confirmation email to your email account' mod='tbgdpr'}
-    </div>
-  {elseif $status == 'approved'}
-    <div class="alert alert-warning" role="alert">
-      {l s='Your request has been processed and you have been removed from all direct marketing.' mod='tbgdp'}
-    </div>
-  {/if}
+{include file="./misc/errors.tpl"}
+{include file="./misc/warnings.tpl"}
+{include file="./misc/confirmations.tpl"}
 
-  {if $logged}
-    <form method="post" style="max-width:500px;margin: 0 auto;">
-      <div class="required form-group form-ok">
-        <label for="email" class="required">
-          {l s='Email address' mod='tbgdpr'}
-          <sup>*</sup>
-        </label>
-        <input class="is_required validate form-control" data-validate="isEmail" type="email" id="email" name="email"
-               value="{$customerEmail|escape:'html':'UTF-8'}">
-      </div>
-      <div class="form-group form-ok">
-        <label for="phone_mobile">
-          {l s='Mobile phone' mod='tbgdpr'}
-        </label>
-        <input class="validate form-control" data-validate="isPhoneNumber" type="tel" id="phone_mobile"
-               name="phone_mobile" value="{$customerMobilePhone|escape:'html':'UTF-8'}">
-      </div>
-      <div class="form-group">
-        <span><input name="agreeobject" type="checkbox" value="confirmation"></span>
-        <label>{l s='I agree to unsubscribe from all direct marketing purposes' mod='tbgdpr'}</label>
-      </div>
-      <div class="form-group">
-        <input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}">
-        <input class="btn btn-danger" style="margin-right: 5px;" name="submitcustomerobject" type="submit"
-               value="{l s='Unsubscribe' mod='tbgdpr'}">
-      </div>
-    </form>
-  {else}
-    <form method="post" style="max-width:500px;margin: 0 auto;">
-      <div class="required form-group form-ok">
-        <label for="email" class="required">
-          {l s='Email address' mod='tbgdpr'}
-          <sup>*</sup>
-        </label>
-        <input class="is_required validate form-control"
-               data-validate="isEmail"
-               type="email"
-               id="email"
-               name="email"
-               value=""
-        >
-      </div>
-      <div class="form-group">
-        <span><input name="agreeobject" type="checkbox" value="confirmation"></span>
-        <label>{l s='I agree to unsubscribe from all direct marketing purposes' mod='tbgdpr'}</label>
-      </div>
-      <div class="form-group">
-        <input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}">
-        <input class="btn btn-danger"
-               style="margin-right: 5px;"
-               name="submitguestobject"
-               type="submit"
-               value="{l s='Unsubscribe' mod='tbgdpr'}"
-        >
-      </div>
-    </form>
-  {/if}
+<h1 class="page-heading">{l s='Unsubscribe' mod='tbgdpr'}</h1>
+<div>
+  {$tbgdpr_object nofilter}
+</div>
 
-{/block}
+{if $logged}
+  <form method="post"
+        style="max-width:500px;margin: 0 auto;"
+        action="{$link->getModuleLink('tbgdpr', 'object', [], true)|escape:'htmlall':'UTF-8'}">
+
+    <input type="hidden"
+           name="csrf"
+           value="{$csrf|escape:'html':'UTF-8'}">
+
+    <div class="required form-group form-ok">
+      <label for="email" class="required">
+        {l s='Email address' mod='tbgdpr'}
+        <sup>*</sup>
+      </label>
+      <input class="is_required validate form-control"
+             data-validate="isEmail"
+             type="email"
+             id="email"
+             name="email"
+             value="{$customerEmail|escape:'html':'UTF-8'}">
+    </div>
+
+    <div class="form-group form-ok">
+      <label for="phone_mobile">
+        {l s='Mobile phone' mod='tbgdpr'}
+      </label>
+      <input class="validate form-control"
+             data-validate="isPhoneNumber"
+             type="tel"
+             id="phone_mobile"
+             name="phone_mobile"
+             value="{$customerMobilePhone|escape:'html':'UTF-8'}">
+    </div>
+
+    <div class="required form-group form-ok">
+      <label for="accept-gdpr-object">
+        <input id="accept-gdpr-object"
+               name="accept-gdpr-object"
+               type="checkbox"
+               value="1">
+        &nbsp;{l s='I agree to unsubscribe from all direct marketing purposes' mod='tbgdpr'}
+      </label>
+    </div>
+
+    <div class="form-group">
+      <input class="btn btn-danger"
+             style="margin-right: 5px;"
+             name="gdpr-customer-object"
+             type="submit"
+             value="{l s='Unsubscribe' mod='tbgdpr'}">
+    </div>
+
+  </form>
+{else}
+  <form method="post"
+        style="max-width:500px;margin: 0 auto;"
+        action="{$link->getModuleLink('tbgdpr', 'object', [], true)|escape:'htmlall':'UTF-8'}">
+
+    <input type="hidden"
+           name="csrf"
+           value="{$csrf|escape:'html':'UTF-8'}">
+
+    <div class="required form-group form-ok">
+      <label for="email" class="required">
+        {l s='Email address' mod='tbgdpr'}
+        <sup>*</sup>
+      </label>
+      <input class="is_required validate form-control"
+             data-validate="isEmail"
+             type="email"
+             id="email"
+             name="email"
+             value=""
+              >
+    </div>
+
+    <div class="required form-group form-ok">
+      <label for="accept-gdpr-object">
+        <input id="accept-gdpr-object"
+               name="accept-gdpr-object"
+               type="checkbox"
+               value="1">
+        &nbsp;{l s='I agree to unsubscribe from all direct marketing purposes' mod='tbgdpr'}
+      </label>
+    </div>
+
+    <div class="form-group">
+      <input class="btn btn-danger"
+             style="margin-right: 5px;"
+             name="gdpr-guest-object"
+             type="submit"
+             value="{l s='Unsubscribe' mod='tbgdpr'}">
+    </div>
+
+  </form>
+{/if}
