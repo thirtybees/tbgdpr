@@ -24,9 +24,7 @@
   <span class="navigation_page">{l s='Right to be notified' mod='tbgdpr'}</span>
 {/capture}
 
-{block name='page_content'}
-  <h1 class="page-heading">{l s='Right to be notified' mod='tbgdpr'}</h1>
-  <div>
-    {$tbgdpr_notification}
-  </div>
-{/block}
+<h1 class="page-heading">{l s='Right to be notified' mod='tbgdpr'}</h1>
+<div>
+  {$tbgdpr_notification nofilter}
+</div>
