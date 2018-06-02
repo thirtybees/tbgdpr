@@ -15,7 +15,6 @@
  * @copyright 2018 thirty bees
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-
 {capture name=path}
   <a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">{l s='My account' mod='tbgdpr'}</a>
   <span class="navigation-pipe">{$navigationPipe}</span>
@@ -24,34 +23,34 @@
   <span class="navigation_page">{l s='Right to data portability' mod='tbgdpr'}</span>
 {/capture}
 
-{block name='page_content'}
-  <h1 class="page-heading">{l s='Right to data portability' mod='tbgdpr'}</h1>
-  <div>
-    {$tbgdpr_portability}
+{include file="./misc/errors.tpl"}
+{include file="./misc/warnings.tpl"}
+{include file="./misc/confirmations.tpl"}
+
+<h1 class="page-heading">{l s='Right to data portability' mod='tbgdpr'}</h1>
+<div>
+  {$tbgdpr_portability|escape:'htmlall':'UTF-8'}
+</div>
+<form method="post"
+      style="max-width:500px;margin: 0 auto;"
+      action="{$link->getModuleLink('tbgdpr', 'dataportability', [], true)|escape:'htmlall':'UTF-8'}">
+  <input type="hidden"
+         name="csrf"
+         value="{$csrf|escape:'html':'UTF-8'}">
+
+  <div class="required form-group form-ok">
+    <label for="accept-gdpr-export">
+      <input id="accept-gdpr-export"
+             name="accept-gdpr-export"
+             type="checkbox"
+             value="1">
+      &nbsp;{l s='I confirm to export my personal data from this shop' mod='tbgdpr'}
+    </label>
   </div>
-  {if $tbgdpr_status == 'approved'}
-    <div class="alert alert-warning" role="alert">
-      {l s='Your request has been processed and a CSV file has been generated.' mod='tbgdpr'}
-    </div>
-  {/if}
-  <form method="post" style="max-width:500px;margin: 0 auto;">
-    <div class="required form-group form-ok">
-        <span>
-          <input name="acceptexport"
-                 type="checkbox"
-                 value="confirmation">
-          <label>{l s='I confirm to export my personal data from this shop' mod='tbgdpr'}</label>
-        </span>
-    </div>
 
-    <input class="btn btn-danger"
-           style="margin-right: 5px;"
-           name="gdprexport"
-           type="submit"
-           value="{l s='Export Data' mod='tbgdpr'}">
-    <input type="hidden"
-           name="token"
-           value="{$token|escape:'html':'UTF-8'}">
-
-  </form>
-{/block}
+  <input class="btn btn-danger"
+         style="margin-right: 5px;"
+         name="gdpr-export"
+         type="submit"
+         value="{l s='Export Data' mod='tbgdpr'}">
+</form>
