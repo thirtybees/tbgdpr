@@ -29,7 +29,7 @@
 
 <h1 class="page-heading">{l s='Right to data portability' mod='tbgdpr'}</h1>
 <div>
-  {$tbgdpr_portability|escape:'htmlall':'UTF-8'}
+  {$tbgdpr_portability nofilter}
 </div>
 <form method="post"
       style="max-width:500px;margin: 0 auto;"
