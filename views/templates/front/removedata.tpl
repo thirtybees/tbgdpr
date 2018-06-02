@@ -29,7 +29,7 @@
 
 <h1 class="page-heading">{l s='Right to be forgotten' mod='tbgdpr'}</h1>
 <div>
-  {$tbgdpr_forgotten|escape:'htmlall':'UTF-8'}
+  {$tbgdpr_forgotten nofilter}
 </div>
 
 <form method="post" action="{$link->getModuleLink('tbgdpr', 'removedata', [], true)|escape:'htmlall':'UTF-8'}">
