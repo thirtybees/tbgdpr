@@ -99,6 +99,10 @@ class TbGdprRequest extends TbGdprObjectModel
                 $customer = new Customer($this->id_customer);
                 $result = Hook::exec('actionDeleteGdprCustomer', ['email' => $customer->email, 'id_customer' => $customer->id, 'id_guest' => $customer->id_guest]);
                 break;
+            case static::REQUEST_TYPE_GET_DATA:
+                $customer = new Customer($this->id_customer);
+                $result = Hook::exec('actionExportGdprData', ['email' => $customer->email, 'id_customer' => $customer->id, 'id_guest' => $customer->id_guest]);
+                break;    
         }
 
         $this->executed = true;
