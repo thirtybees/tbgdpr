@@ -103,6 +103,13 @@ class TbGdprRequest extends TbGdprObjectModel
             case static::REQUEST_TYPE_GET_DATA:
                 $customer = new Customer($this->id_customer);
                 $result = Hook::exec('actionExportGdprData', ['email' => $customer->email, 'id_customer' => $customer->id, 'id_guest' => $customer->id_guest]);
+                break;
+            // Should we still have a form on the object.tpl page with input fields for the email address
+            // and phone number for a customer if we can get all fields via the Customer Object?
+            case static::REQUEST_TYPE_OBJECT:
+                $customer = new Customer($this->id_customer);
+                $customerMobilePhone = Address::initialize(Address::getFirstCustomerAddressId(Context::getContext()->customer->id))->phone_mobile;
+                $result = Hook::exec('actionUnsubscribeMember', ['customer' => $customer->id, 'guest' => $customer->id_guest, 'email' => $customer->email, 'phone' => $customerMobilePhone]);
                 break;    
         }
 
