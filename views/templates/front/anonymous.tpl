@@ -27,6 +27,6 @@
 {block name='page_content'}
   <h1 class="page-heading">{l s='Right to be anonymous' mod='tbgdpr'}</h1>
   <div>
-    {$tbgdpr_anonymous}
+    {$tbgdpr_anonymous nofilter}
   </div>
 {/block}
