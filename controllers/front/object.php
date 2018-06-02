@@ -26,214 +26,134 @@ if (!defined('_PS_VERSION_')) {
  */
 class TbGdprObjectModuleFrontController extends ModuleFrontController
 {
-    /** @var string $confirmation */
-    public $confirmation = '';
     /** @var bool $display_column_left */
     public $display_column_left = false;
     /** @var bool $display_column_right */
     public $display_column_right = false;
-    /** @var string $table_name */
-    protected $table_name = 'tbgdpr_guest_object';
+    /** @var array $confirmations */
+    public $confirmations = [];
+    /** @var array $warnings */
+    public $warnings = [];
+
 
     /**
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws Adapter_Exception
+     *
+     * @since 1.0.0
      */
     public function initContent()
     {
         parent::initContent();
 
-        $getObjectRequest = Tools::getValue('link');
-
-        if ($getObjectRequest && $this->isMD5($getObjectRequest)) {
-
-            $getData = Db::getInstance()->getRow(
-                'SELECT * FROM '._DB_PREFIX_.pSQL($this->table_name).
-                ' WHERE token = '.pSQL($getObjectRequest)
-            );
-
-            $data = [];
-            $data['status'] = 'approved';
-            $data['date_approved'] = time();
-
-            $this->updateGuestObjectRequest($data);
-
-            $customer = new Customer($this->context->customer->id);
-            $guest = new Guest($getData['id_guest']);
-
-            $member = [
-                'customer' => $customer,
-                'guest'    => $guest,
-                'email'    => $getData['email'],
-                'phone'    => null,
-            ];
-
-            $result = Hook::exec('actionUnsubscribeMember', $member);
-
-            if ($result == true) {
-                $this->confirmation[] = $this->module->l('Successfully removed personal data');
-            } else {
-                $this->errors[] = $this->module->l('There was an error processing your request. Please contact customer support');
-            }
-        }
-
         $customer = new Customer($this->context->customer->id);
         $customerMobilePhone = Address::initialize(Address::getFirstCustomerAddressId(Context::getContext()->customer->id))->phone_mobile;
-        $token = Tools::getToken(false);
-        $guestId = $this->context->cookie->id_guest;
-        $status = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-            (new DbQuery())
-                ->select('*')
-                ->from(bqSQL($this->table_name))
-                ->where('`guest_id` = \''.pSQL($guestId).'\'')
-        );
 
-        $this->context->smarty->assign([
-            'status'              => $status['status'],
+        $this->context->smarty->assign(array(
+            'csrf'                => Tools::getToken('object'),
+            'confirmations'       => $this->confirmations,
+            'tbgdpr_object'       => Configuration::getInt(TbGdpr::OBJECT_TEXT)[$this->context->language->id],
             'customerEmail'       => $customer->email,
-            'token'               => $token,
-            'customerMobilePhone' => $customerMobilePhone,
-            'tbgdpr_object'       => Configuration::get(TbGdpr::OBJECT_TEXT)[$this->context->language->id],
-        ]);
+            'customerMobilePhone' => $customerMobilePhone
+        ));
 
         $this->setTemplate('object.tpl');
     }
 
     /**
+     * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws Adapter_Exception
      *
      * @since 1.0.0
+     * @throws Adapter_Exception
      */
     public function postProcess()
     {
-        //submit customer form
-        if (Tools::isSubmit('submitcustomerobject')) {
-            $token = Tools::getValue('token');
-            if (!isset($token) || $token != $this->isTokenValid()) {
-                die('An error occured');
+        // submit customer object to direct marketing
+        if (Tools::isSubmit('gdpr-customer-object')) {
+            if (!$this->isTokenValid()) {
+                $this->errors[] = $this->module->l('Unable to confirm request', 'object');
+                return;
             }
-            if (Tools::getIsset('agreeobject') &&
-                Tools::getValue('agreeobject') == 'confirmation'
-            ) {
-                $customer = $this->context->customer;
-                $customerEmail = Tools::getValue('email');
-                $customerPhone = Tools::getValue('phone');
-                $guest = new Guest($this->context->cookie->id_guest);
+            if (Tools::getValue('accept-gdpr-object')) {
+                if (!Validate::isLoadedObject(TbGdprRequest::getRequestsForGuest($this->context->customer->id))) {
+                    $request = new TbGdprRequest();
+                    $request->id_customer = $this->context->customer->id;
+                    $request->id_guest = $this->context->cookie->id_guest;
+                    $request->email = Tools::getValue('email');
 
-                $member = [
-                    'customer' => $customer,
-                    'guest'    => $guest,
-                    'email'    => $customerEmail,
-                    'phone'    => $customerPhone,
-                ];
+                    $request->request_type = TbGdprRequest::REQUEST_TYPE_OBJECT;
+                    $request->status = TbGdprRequest::STATUS_APPROVED;
+                    $request->comment = '';
 
-                $result = Hook::exec('actionUnsubscribeMember', $member);
+                    $request->add();
 
-                if ($result == true) {
-                    $this->confirmation[] = $this->module->l('Successfully removed personal data');
-                } else {
-                    $this->errors[] = $this->module->l('There was an error processing your request. Please contact customer support');
+                    $result = $request->execute();
+
+                    if ($result) {
+                        $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes');
+                    } else {
+                        $this->errors[] = $this->module->l('An error has occurred. Please contact customer support');
+                    }
                 }
-
+            } else {
+                $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to be removed from all direct marketing purposes', 'object');
             }
         }
-
-        //submit guest form
-        if (Tools::isSubmit('submitguestobject')) {
-            $token = Tools::getValue('token');
-            if (!isset($token) || $token != $this->isTokenValid()) {
-                die('An error occured');
+        // submit guest object to direct marketing
+        if (Tools::isSubmit('gdpr-guest-object')) {
+            if (!$this->isTokenValid()) {
+                $this->errors[] = $this->module->l('Unable to confirm request', 'object');
+                return;
             }
-            if (Tools::getIsset('agreeobject') &&
-                Tools::getValue('agreeobject') == 'confirmation'
-            ) {
-                $guestEmail = Tools::getValue('email');
+            if (Tools::getValue('accept-gdpr-object')) {
+                if (!Validate::isLoadedObject(TbGdprRequest::getRequestsForGuest($this->context->customer->id))) {
+                    $request = new TbGdprRequest();
+                    $request->id_customer = $this->context->customer->id;
+                    $request->id_guest = $this->context->cookie->id_guest;
+                    $request->email = Tools::getValue('email');
 
-                $data = [];
-                $data['id_guest'] = $this->context->cookie->id_guest;
-                $data['email'] = $guestEmail;
-                $data['token'] = $activation_link = md5(uniqid(rand(), true));
-                $data['status'] = 'pending';
-                $data['date_added'] = time();
+                    $request->request_type = TbGdprRequest::REQUEST_TYPE_OBJECT;
+                    $request->status = TbGdprRequest::STATUS_APPROVED;
+                    $request->comment = '';
 
-                $this->addGuestObjectRequest($data);
+                    // If someone is not logged in, the Hook actionUnsubscribeMember can not be executed via TbGdprRequest
+                    // execute() method. Therefore, add the request, set as executed and execute actionUnsubscribeMember
+                    // directly.
 
-                $idLang = $this->context->cookie->id_lang;
-                $mailToken = md5(uniqid(rand(), true));
-                $link = $this->context->link->getModuleLink($this->name, 'object').'&link='.$mailToken;
+                    $request->executed = 1;
 
-                Mail::Send($idLang,
-                    'guest_object',
-                    $this->l('Unsubscribe from direct marketing'),
-                    [
-                        '{link}' => $link,
-                    ],
-                    $customer->email,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    'modules/tbgdpr/mails/');
+                    $request->add();
+
+                    $result = Hook::exec('actionUnsubscribeMember', ['customer' => $request->id_customer, 'guest' => $request->id_guest, 'email' => $request->email, 'phone' => null]);
+
+                    if ($result) {
+                        $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes');
+                    } else {
+                        $this->errors[] = $this->module->l('An error has occurred. Please contact customer support');
+                    }
+                }
+            } else {
+                $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to be removed from all direct marketing purposes', 'object');
             }
         }
     }
 
     /**
-     * @param $data
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     *
-     * @since 1.0.0
-     */
-    protected function addGuestObjectRequest($data)
-    {
-        if (!Db::getInstance()->insert(
-            pSQL($this->table_name),
-            $data
-        )
-        ) {
-            $this->_errors[] = Tools::displayError('Error while adding the request to object');
-        }
-    }
-
-    /**
-     * @param $data
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     *
-     * @since 1.0.0
-     */
-    protected function updateGuestObjectRequest($data)
-    {
-        if (!Db::getInstance()->update(
-            pSQL($this->table_name),
-            $data
-        )
-        ) {
-            $this->_errors[] = Tools::displayError('Error while updating request to object');
-        }
-    }
-
-    /**
-     * @param $str
+     * Checks if token is valid.
      *
      * @return bool
      *
-     * @since 1.0.0
+     * @since   1.0.0
+     *
+     * @throws PrestaShopException
      */
-    private function isMD5($str)
+    public function isTokenValid()
     {
-        for ($i = 0; $i < strlen($str); $i++) {
-            if (!(($str[$i] >= 'a' && $str[$i] <= 'z') || ($str[$i] >= '0' && $str[$i] <= '9'))) {
-                return false;
-            }
+        if (!Configuration::get('PS_TOKEN_ENABLE')) {
+            return true;
         }
 
-        return true;
+        return strcasecmp(Tools::getToken('object'), Tools::getValue('csrf')) === 0;
     }
 }
