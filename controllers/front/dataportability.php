@@ -26,14 +26,14 @@ if (!defined('_PS_VERSION_')) {
  */
 class TbGdprDataportabilityModuleFrontController extends ModuleFrontController
 {
-    /** @var string $confirmation */
-    public $confirmation = '';
     /** @var bool $display_column_left */
     public $display_column_left = false;
     /** @var bool $display_column_right */
     public $display_column_right = false;
-    /** @var string $table_name */
-    protected $table_name = 'tbgdpr_requests';
+    /** @var array $confirmations */
+    public $confirmations = [];
+    /** @var array $warnings */
+    public $warnings = [];
 
     /**
      * @throws PrestaShopDatabaseException
@@ -44,13 +44,13 @@ class TbGdprDataportabilityModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         parent::initContent();
-        $customerData = $this->getGdprExportRequest();
-        $token = Tools::getToken(false);
+        //$customerData = $this->getGdprExportRequest();
+        //$token = Tools::getToken(false);
 
         $this->context->smarty->assign(array(
-            'token' => $token,
-            'confirmation' => $this->confirmation,
-            'tbgdpr_status' => $customerData['status'],
+            'csrf'               => Tools::getToken('dataportability'),
+            'confirmations'       => $this->confirmations,
+            //'tbgdpr_status'      => $customerData['status'],
             'tbgdpr_portability' => Configuration::getInt(TbGdpr::DATAPORTABILITY_TEXT)[$this->context->language->id]
         ));
 
@@ -62,130 +62,58 @@ class TbGdprDataportabilityModuleFrontController extends ModuleFrontController
      * @throws PrestaShopException
      *
      * @since 1.0.0
+     * @throws Adapter_Exception
      */
     public function postProcess()
     {
-        //submit export data request
-        if (Tools::isSubmit('gdprexport')) {
-            $token = Tools::getValue('token');
-            if (!isset($token) || $token != $this->isTokenValid()) {
-                die('An error occured');
+        //submit removal request
+        if (Tools::isSubmit('gdpr-export')) {
+            if (!$this->isTokenValid()) {
+                $this->errors[] = $this->module->l('Unable to confirm request', 'removedata');
+                return;
             }
-            if (Tools::getIsset('acceptexport') && Tools::getValue('acceptexport') == 'confirmation') {
-                if (!$this->getGdprExportRequest()) {
-                    $customerData = array();
-                    $customerData['id_customer'] = (int)Context::getContext()->customer->id;
-                    $customerData['type'] = 'export';
-                    $customerData['status'] = 'approved';
-                    $customerData['comment'] = '';
-                    $customerData['date_added'] = time();
+            if (Tools::getValue('accept-gdpr-export')) {
+                if (!Validate::isLoadedObject(TbGdprRequest::getRequestsForGuest($this->context->customer->id))) {
+                    $request = new TbGdprRequest();
+                    $request->id_customer = $this->context->customer->id;
+                    $request->id_guest = $this->context->cookie->id_guest;
+                    $request->email = $this->context->customer->email;
 
-                    $this->addGdprExportRequest($customerData);
+                    $request->request_type = TbGdprRequest::REQUEST_TYPE_GET_DATA;
+                    $request->status = TbGdprRequest::STATUS_APPROVED;
+                    $request->comment = '';
 
-                    $customer = new Customer($this->context->customer->id);
-                    $result = Hook::exec('actionExportGdprData', $customer);
+                    $request->add();
 
-                    if ($result == true) {
+                    $result = $request->execute();
+
+                    if ($result) {
                         $this->confirmations[] = $this->module->l('Your personal data has been exported');
                     } else {
                         $this->errors[] = $this->module->l('An error has occurred. Please contact customer support');
                     }
                 }
-
             } else {
-                $customerData = array();
-                $customerData['type'] = 'export';
-                $customerData['status'] = 'approved';
-                $customerData['comment'] = '';
-                $customerData['date_updated'] = time();
-                $this->updateGdprExportRequest($customerData);
-
-                $customer = new Customer($this->context->customer->id);
-                $result = Hook::exec('actionExportGdprData', $customer);
-
-                if ($result == true) {
-                    $this->confirmations[] = $this->module->l('Your personal data has been exported');
-                } else {
-                    $this->errors[] = $this->module->l('An error has occurred. Please contact customer support');
-                }
+                $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to export your personal data', 'removedata');
             }
         }
     }
 
     /**
-     * @return mixed
+     * Checks if token is valid.
      *
-     * @since 1.0.0
-     */
-    protected function getVersionNumber()
-    {
-        $version = _PS_VERSION_;
-        $getNumber = explode(".", $version);
-        $versionNumber = $getNumber[1];
-
-        return $versionNumber;
-    }
-
-    /**
-     * @return array|bool|null|object
-     * @throws PrestaShopDatabaseException
+     * @return bool
+     *
+     * @since   1.0.0
+     *
      * @throws PrestaShopException
-     *
-     * @since 1.0.0
      */
-    protected function getGdprExportRequest()
+    public function isTokenValid()
     {
-        $customerId = $this->context->customer->id;
-        $customerData = Db::getInstance()->getRow(
-            'SELECT * FROM ' . _DB_PREFIX_ . pSQL($this->table_name) .
-            ' WHERE type = "export" AND id_customer = ' . pSQL($customerId)
-        );
-
-        if (count($customerData) > 0) {
-            return $customerData;
-        } else {
-            return false;
+        if (!Configuration::get('PS_TOKEN_ENABLE')) {
+            return true;
         }
-    }
 
-    /**
-     * @param $customerData
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     *
-     * @since 1.0.0
-     */
-    protected function addGdprExportRequest($customerData)
-    {
-        if (!Db::getInstance()->insert(
-            pSQL($this->table_name),
-            $customerData
-        )
-        ) {
-            $this->_errors[] = Tools::displayError('Error while adding request for removal');
-        }
-    }
-
-    /**
-     * @param $customerData
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     *
-     * @since 1.0.0
-     */
-    protected function updateGdprExportRequest($customerData)
-    {
-        $customerId = $this->context->customer->id;
-        if (!Db::getInstance()->update(
-            pSQL($this->table_name),
-            $customerData,
-            'id_customer = ' . pSQL($customerId) . ' AND type = "export"'
-        )) {
-            $this->_errors[] = Tools::displayError('Error while updating request export request');
-        } else {
-            $this->confirmations[] = 'Your export request has been updated';
-        }
+        return strcasecmp(Tools::getToken('dataportability'), Tools::getValue('csrf')) === 0;
     }
 }
