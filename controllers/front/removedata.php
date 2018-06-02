@@ -30,8 +30,6 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
     public $display_column_left = false;
     /** @var bool $display_column_right */
     public $display_column_right = false;
-    /** @var string $table_name */
-    protected $table_name = 'tbgdpr_requests';
     /** @var array $confirmations */
     public $confirmations = [];
     /** @var array $warnings */
