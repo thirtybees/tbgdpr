@@ -44,13 +44,10 @@ class TbGdprDataportabilityModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         parent::initContent();
-        //$customerData = $this->getGdprExportRequest();
-        //$token = Tools::getToken(false);
 
         $this->context->smarty->assign(array(
             'csrf'               => Tools::getToken('dataportability'),
             'confirmations'       => $this->confirmations,
-            //'tbgdpr_status'      => $customerData['status'],
             'tbgdpr_portability' => Configuration::getInt(TbGdpr::DATAPORTABILITY_TEXT)[$this->context->language->id]
         ));
 
