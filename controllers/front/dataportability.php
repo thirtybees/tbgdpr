@@ -66,7 +66,7 @@ class TbGdprDataportabilityModuleFrontController extends ModuleFrontController
         //submit removal request
         if (Tools::isSubmit('gdpr-export')) {
             if (!$this->isTokenValid()) {
-                $this->errors[] = $this->module->l('Unable to confirm request', 'removedata');
+                $this->errors[] = $this->module->l('Unable to confirm request', 'dataportability');
                 return;
             }
             if (Tools::getValue('accept-gdpr-export')) {
@@ -91,7 +91,7 @@ class TbGdprDataportabilityModuleFrontController extends ModuleFrontController
                     }
                 }
             } else {
-                $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to export your personal data', 'removedata');
+                $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to export your personal data', 'dataportability');
             }
         }
     }
