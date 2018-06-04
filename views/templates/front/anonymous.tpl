@@ -15,7 +15,6 @@
  * @copyright 2018 thirty bees
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-
 {capture name=path}
   <a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">{l s='My account' mod='tbgdpr'}</a>
   <span class="navigation-pipe">{$navigationPipe}</span>
@@ -24,9 +23,14 @@
   <span class="navigation_page">{l s='Right to be anonymous' mod='tbgdpr'}</span>
 {/capture}
 
-{block name='page_content'}
+<div style="padding-top:20px;padding-bottom:20px;max-width:500px;margin:auto;border:1.5px solid;text-align:center">
+
+  <i class="icon icon-shield" style="font-size: 50px"></i>
+
   <h1 class="page-heading">{l s='Right to be anonymous' mod='tbgdpr'}</h1>
-  <div>
+
+  <div style="max-width:400px;margin:auto">
     {$tbgdpr_anonymous nofilter}
   </div>
-{/block}
+
+</div>
