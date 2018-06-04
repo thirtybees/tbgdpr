@@ -23,34 +23,41 @@
   <span class="navigation_page">{l s='Right to data portability' mod='tbgdpr'}</span>
 {/capture}
 
-{include file="./misc/errors.tpl"}
-{include file="./misc/warnings.tpl"}
-{include file="./misc/confirmations.tpl"}
+<div style="padding-top:20px;padding-bottom:20px;max-width:500px;margin:auto;border:1.5px solid;text-align:center">
 
-<h1 class="page-heading">{l s='Right to data portability' mod='tbgdpr'}</h1>
-<div>
-  {$tbgdpr_portability nofilter}
-</div>
-<form method="post"
-      style="max-width:500px;margin: 0 auto;"
-      action="{$link->getModuleLink('tbgdpr', 'dataportability', [], true)|escape:'htmlall':'UTF-8'}">
-  <input type="hidden"
-         name="csrf"
-         value="{$csrf|escape:'html':'UTF-8'}">
+  {include file="./misc/errors.tpl"}
+  {include file="./misc/warnings.tpl"}
+  {include file="./misc/confirmations.tpl"}
 
-  <div class="required form-group form-ok">
-    <label for="accept-gdpr-export">
-      <input id="accept-gdpr-export"
-             name="accept-gdpr-export"
-             type="checkbox"
-             value="1">
-      &nbsp;{l s='I confirm to export my personal data from this shop' mod='tbgdpr'}
-    </label>
+  <i class="icon icon-shield" style="font-size: 50px"></i>
+
+  <h1 class="page-heading">{l s='Right to data portability' mod='tbgdpr'}</h1>
+
+  <div style="max-width:400px;margin:auto">
+    {$tbgdpr_portability nofilter}
   </div>
+  <form method="post"
+        style="max-width:400px;margin: 0 auto;"
+        action="{$link->getModuleLink('tbgdpr', 'dataportability', [], true)|escape:'htmlall':'UTF-8'}">
+    <input type="hidden"
+           name="csrf"
+           value="{$csrf|escape:'html':'UTF-8'}">
 
-  <input class="btn btn-danger"
-         style="margin-right: 5px;"
-         name="gdpr-export"
-         type="submit"
-         value="{l s='Export Data' mod='tbgdpr'}">
-</form>
+    <div class="required form-group form-ok">
+      <label for="accept-gdpr-export">
+        <input id="accept-gdpr-export"
+               name="accept-gdpr-export"
+               type="checkbox"
+               value="1">
+        &nbsp;{l s='I confirm to export my personal data from this shop' mod='tbgdpr'}
+      </label>
+    </div>
+
+    <input class="btn btn-danger"
+           style="margin-right: 5px;"
+           name="gdpr-export"
+           type="submit"
+           value="{l s='Export Data' mod='tbgdpr'}">
+  </form>
+
+</div>
