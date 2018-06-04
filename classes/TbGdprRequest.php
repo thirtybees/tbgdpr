@@ -64,7 +64,7 @@ class TbGdprRequest extends TbGdprObjectModel
         'fields'    => [
             'id_customer'  => ['type' => self::TYPE_INT,    'validate' => 'isUnsignedInt',  'required' => false, 'db_type' => 'INT(11) UNSIGNED'],
             'id_guest'     => ['type' => self::TYPE_INT,    'validate' => 'isUnsignedInt',  'required' => false, 'db_type' => 'INT(11) UNSIGNED'],
-            'email'        => ['type' => self::TYPE_HEX,    'validate' => 'isString', 'required' => false, 'db_type' => 'BINARY(64)'],
+            'email'        => ['type' => self::TYPE_HEX,    'validate' => 'isString',       'required' => false, 'db_type' => 'BINARY(64)'],
             'request_type' => ['type' => self::TYPE_INT,    'validate' => 'isUnsignedInt',  'required' => true,  'db_type' => 'INT(11) UNSIGNED'],
             'status'       => ['type' => self::TYPE_INT,    'validate' => 'isUnsignedInt',  'required' => true,  'db_type' => 'INT(11) UNSIGNED'],
             'executed'     => ['type' => self::TYPE_BOOL,   'validate' => 'isBool',         'required' => false, 'db_type' => 'TINYINT(1) UNSIGNED'],
