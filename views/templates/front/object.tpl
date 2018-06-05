@@ -31,7 +31,7 @@
 
 <h1 class="page-heading">{l s='Unsubscribe' mod='tbgdpr'}</h1>
 
-<div style="max-width:400px;margin:auto">
+<div>
   {$tbgdpr_object nofilter}
 </div>
 
