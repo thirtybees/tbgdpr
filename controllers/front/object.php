@@ -46,15 +46,15 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        $customer = new Customer($this->context->customer->id);
-        $customerMobilePhone = Address::initialize(Address::getFirstCustomerAddressId(Context::getContext()->customer->id))->phone_mobile;
+        /*$customer = new Customer($this->context->customer->id);
+        $customerMobilePhone = Address::initialize(Address::getFirstCustomerAddressId(Context::getContext()->customer->id))->phone_mobile;*/
 
         $this->context->smarty->assign(array(
             'csrf'                => Tools::getToken('object'),
             'confirmations'       => $this->confirmations,
             'tbgdpr_object'       => Configuration::getInt(TbGdpr::OBJECT_TEXT)[$this->context->language->id],
-            'customerEmail'       => $customer->email,
-            'customerMobilePhone' => $customerMobilePhone
+            /*'customerEmail'       => $customer->email,
+            'customerMobilePhone' => $customerMobilePhone*/
         ));
 
         $this->setTemplate('object.tpl');
@@ -80,7 +80,7 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
                     $request = new TbGdprRequest();
                     $request->id_customer = $this->context->customer->id;
                     $request->id_guest = $this->context->cookie->id_guest;
-                    $request->email = Tools::getValue('email');
+                    $request->email = $this->context->customer->email;
 
                     $request->request_type = TbGdprRequest::REQUEST_TYPE_OBJECT;
                     $request->status = TbGdprRequest::STATUS_APPROVED;
