@@ -46,7 +46,7 @@
              name="csrf"
              value="{$csrf|escape:'html':'UTF-8'}">
 
-      <div class="required form-group form-ok">
+      {*<div class="required form-group form-ok">
         <label for="email" class="required">
           {l s='Email address' mod='tbgdpr'}
           <sup>*</sup>
@@ -69,7 +69,7 @@
                id="phone_mobile"
                name="phone_mobile"
                value="{$customerMobilePhone|escape:'html':'UTF-8'}">
-      </div>
+      </div>*}
 
       <div class="required form-group form-ok">
         <label for="accept-gdpr-object">
