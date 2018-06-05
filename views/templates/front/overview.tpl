@@ -23,19 +23,18 @@
 
 <h1 id="gdpr-overview"
     class="page-heading"
-    style="clear: both"
 >
   {l s='Privacy Tools' mod='tbgdpr'}
 </h1>
 
 <h2 class="page-heading">{l s='Available Tools' mod='tbgdpr'}</h2>
 
-<div class="links" style="clear:both">
+<div class="links clearfix">
   {foreach $tbgdpr_blocks as $block}
     {include file="./overview/block.tpl"}
   {/foreach}
 </div>
-<h2 class="page-heading" style="clear: both">{l s='Pending Requests' mod='tbgdpr'}</h2>
+<h2 class="page-heading">{l s='Pending Requests' mod='tbgdpr'}</h2>
 {if !empty($gdpr_requests)}
 <table class="table table-responsive">
   <tbody>

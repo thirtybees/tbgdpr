@@ -15,7 +15,7 @@
  * @copyright 2018 thirty bees
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-<li style="clear: both">
+<li>
   <a href="{$link->getModuleLink('tbgdpr', 'overview', [], true)|escape:'html':'UTF-8'}" title="{l s='Privacy Tools' mod='tbgdpr'}">
     <i class="icon-shield"></i>
     <span>{l s='Privacy Tools' mod='tbgdpr'}</span>

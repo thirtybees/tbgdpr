@@ -23,21 +23,17 @@
   <span class="navigation_page">{l s='Right to data portability' mod='tbgdpr'}</span>
 {/capture}
 
-<div style="padding-top:20px;padding-bottom:20px;max-width:500px;margin:auto;border:1.5px solid;text-align:center">
-
+<div>
   {include file="./misc/errors.tpl"}
   {include file="./misc/warnings.tpl"}
   {include file="./misc/confirmations.tpl"}
-
-  <i class="icon icon-shield" style="font-size: 50px"></i>
-
   <h1 class="page-heading">{l s='Right to data portability' mod='tbgdpr'}</h1>
 
-  <div style="max-width:400px;margin:auto">
+  <div>
     {$tbgdpr_portability nofilter}
   </div>
   <form method="post"
-        style="max-width:400px;margin: 0 auto;"
+
         action="{$link->getModuleLink('tbgdpr', 'dataportability', [], true)|escape:'htmlall':'UTF-8'}">
     <input type="hidden"
            name="csrf"
@@ -54,10 +50,9 @@
     </div>
 
     <input class="btn btn-danger"
-           style="margin-right: 5px;"
+
            name="gdpr-export"
            type="submit"
            value="{l s='Export Data' mod='tbgdpr'}">
   </form>
-
 </div>

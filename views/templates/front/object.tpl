@@ -27,8 +27,6 @@
 {include file="./misc/warnings.tpl"}
 {include file="./misc/confirmations.tpl"}
 
-<i class="icon icon-shield" style="font-size: 50px"></i>
-
 <h1 class="page-heading">{l s='Unsubscribe' mod='tbgdpr'}</h1>
 
 <div>
@@ -37,38 +35,12 @@
 
 {if $logged}
   <form method="post"
-        style="max-width:400px;margin: 0 auto;"
+
         action="{$link->getModuleLink('tbgdpr', 'object', [], true)|escape:'htmlall':'UTF-8'}">
 
     <input type="hidden"
            name="csrf"
            value="{$csrf|escape:'html':'UTF-8'}">
-
-    {*<div class="required form-group form-ok">
-      <label for="email" class="required">
-        {l s='Email address' mod='tbgdpr'}
-        <sup>*</sup>
-      </label>
-      <input class="is_required validate form-control"
-             data-validate="isEmail"
-             type="email"
-             id="email"
-             name="email"
-             value="{$customerEmail|escape:'html':'UTF-8'}">
-    </div>
-
-    <div class="form-group form-ok">
-      <label for="phone_mobile">
-        {l s='Mobile phone' mod='tbgdpr'}
-      </label>
-      <input class="validate form-control"
-             data-validate="isPhoneNumber"
-             type="tel"
-             id="phone_mobile"
-             name="phone_mobile"
-             value="{$customerMobilePhone|escape:'html':'UTF-8'}">
-    </div>*}
-
     <div class="required form-group form-ok">
       <label for="accept-gdpr-object">
         <input id="accept-gdpr-object"
@@ -81,7 +53,7 @@
 
     <div class="form-group">
       <input class="btn btn-danger"
-             style="margin-right: 5px;"
+
              name="gdpr-customer-object"
              type="submit"
              value="{l s='Unsubscribe' mod='tbgdpr'}">
@@ -90,7 +62,7 @@
   </form>
 {else}
   <form method="post"
-        style="max-width:400px;margin: 0 auto;"
+
         action="{$link->getModuleLink('tbgdpr', 'object', [], true)|escape:'htmlall':'UTF-8'}">
 
     <input type="hidden"
@@ -123,7 +95,7 @@
 
     <div class="form-group">
       <input class="btn btn-danger"
-             style="margin-right: 5px;"
+
              name="gdpr-guest-object"
              type="submit"
              value="{l s='Unsubscribe' mod='tbgdpr'}">

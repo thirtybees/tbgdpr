@@ -15,7 +15,7 @@
  * @copyright 2018 thirty bees
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-<div class="panel" style="text-align:center;">
+<div class="panel">
   <div class="row">
     <div class="col-lg-12">
       <h2>{l s='GDPR Comply' mod='tbgdpr'}</h2>

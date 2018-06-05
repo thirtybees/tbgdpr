@@ -3,7 +3,6 @@
     min-height: 380px;
     position: relative;
     padding: 5px;
-    border: 1.5px solid;
 }
 
 .gdpr-overview-panel-heading {
@@ -17,20 +16,4 @@
     left: 0;
     right: 0;
     margin: 0 auto;
-    -webkit-transition: opacity 100ms ease-in-out;
-    -moz-transition: opacity 100ms ease-in-out;
-    transition: opacity 100ms ease-in-out;
 }
-
-.gdpr-overview-panel-btn-container:hover {
-    opacity: 0.6;
-}
-
-.gdpr-overview-panel-btn-container:active {
-    opacity: 0.4;
-    -webkit-transition: opacity 0s;
-    -moz-transition: opacity 0s;
-    transition: opacity 0s;
-}
-
-

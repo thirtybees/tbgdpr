@@ -52,7 +52,7 @@
       }());
     </script>
   {if $languages|count > 1}
-    <div class="form-group translatable-field lang-{$language.id_lang}"{if $language.id_lang != $defaultFormLanguage} style="display:none;"{/if}>
+    <div class="form-group translatable-field lang-{$language.id_lang}"{if $language.id_lang != $defaultFormLanguage}{/if}>
       <div class="col-lg-9">
         {/if}
         {if isset($input.maxchar) && $input.maxchar}

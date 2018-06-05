@@ -23,14 +23,10 @@
   <span class="navigation_page">{l s='Right to be notified' mod='tbgdpr'}</span>
 {/capture}
 
-<div style="padding-top:20px;padding-bottom:20px;max-width:500px;margin:auto;border:1.5px solid;text-align:center">
-
-  <i class="icon icon-shield" style="font-size: 50px"></i>
-
+<div>
   <h1 class="page-heading">{l s='Right to be notified' mod='tbgdpr'}</h1>
 
-  <div style="max-width:400px;margin:auto">
+  <div>
     {$tbgdpr_notification nofilter}
   </div>
-
 </div>

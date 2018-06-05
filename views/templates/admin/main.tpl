@@ -46,7 +46,7 @@
     {assign var='tab_nr' value=1}
     {foreach from=$tab_contents.contents key=group item=content_group}
       {foreach from=$content_group item=content}
-        <section id="section-shape-{{$tab_nr++}|intval}" style="display: none">{$content.value|escape:'UTF-8'}</section>
+        <section id="section-shape-{{$tab_nr++}|intval}">{$content.value|escape:'UTF-8'}</section>
       {/foreach}
     {/foreach}
   </div>
