@@ -1,4 +1,5 @@
-{*
+<?php
+/**
  * Copyright (C) 2018 thirty bees
  *
  * NOTICE OF LICENSE
@@ -14,10 +15,40 @@
  * @author    thirty bees <contact@thirtybees.com>
  * @copyright 2018 thirty bees
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*}
-<li style="clear: both">
-  <a href="{$link->getModuleLink('tbgdpr', 'overview', [], true)|escape:'html':'UTF-8'}" title="{l s='Privacy Tools' mod='tbgdpr'}">
-    <i class="icon-shield"></i>
-    <span>{l s='Privacy Tools' mod='tbgdpr'}</span>
-  </a>
-</li>
+ */
+
+namespace TbGdprModule;
+
+use Configuration;
+use PrestaShopException;
+use Tools;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+/**
+ * Trait Csrf
+ *
+ * @package TbGdprModule
+ */
+trait Csrf
+{
+    /**
+     * Checks if token is valid.
+     *
+     * @return bool
+     *
+     * @since   1.0.0
+     *
+     * @throws PrestaShopException
+     */
+    public function isCsrfTokenValid()
+    {
+        if (!Configuration::get('PS_TOKEN_ENABLE')) {
+            return true;
+        }
+
+        return strcasecmp(Tools::getToken('dataportability'), Tools::getValue('csrf')) === 0;
+    }
+}

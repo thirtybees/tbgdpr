@@ -83,6 +83,7 @@ class TbGdprRequest extends TbGdprObjectModel
      * @return bool|array Hook output or status
      *
      * @throws PrestaShopException
+     *
      * @since 1.0.0
      */
     public function execute($force = false)
@@ -184,6 +185,7 @@ class TbGdprRequest extends TbGdprObjectModel
      * @param null|int|int[] $idShops
      *
      * @return array
+     *
      * @throws Adapter_Exception
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -230,6 +232,7 @@ class TbGdprRequest extends TbGdprObjectModel
      * @param int $idGuest
      *
      * @return TbGdprRequest[]
+     *
      * @throws Adapter_Exception
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -262,6 +265,7 @@ class TbGdprRequest extends TbGdprObjectModel
      * @param int $idGuest
      *
      * @return TbGdprRequest
+     *
      * @throws Adapter_Exception
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -284,5 +288,37 @@ class TbGdprRequest extends TbGdprObjectModel
         }
 
         return $request;
+    }
+
+    /**
+     * Check if a request already exists for the given email address and request type
+     *
+     * @param string   $email
+     * @param int      $type
+     * @param int|null $idShop
+     *
+     * @return bool
+     *
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public static function existsForEmail($email, $type = self::REQUEST_TYPE_GET_DATA, $idShop = null)
+    {
+        if (!$idShop) {
+            $idShop = Context::getContext()->shop->id;
+        }
+        if (Validate::isEmail($email)) {
+            $email = hash('sha256', $email);
+        }
+
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            (new DbQuery())
+                ->select('COUNT(*)')
+                ->from(bqSQL(static::$definition['table']))
+                ->where('`email` = \''.pSQL($email).'\'')
+                ->where('`request_type` = '.(int) $type)
+                ->where('`id_shop` = '.(int) $idShop)
+        );
     }
 }

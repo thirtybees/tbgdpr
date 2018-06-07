@@ -1,5 +1,5 @@
 <div class="table-responsive">
-  <table class="table">
+  <table class="table" style="min-height: 200px">
     <thead>
       <tr>
         <th><span class="title_box">{l s='ID' mod='tbgdpr'}</span></th>
@@ -11,7 +11,7 @@
     </thead>
     <tbody>
       {foreach $input.requests as $request}
-        <tr>
+        <tr style="min-height: 200px">
           <td><p>{$request->id|intval}</p></td>
           <td>{$request->customer->firstname|escape:'htmlall':'UTF-8'} {$request->customer->lastname|escape:'htmlall':'UTF-8'}</td>
           <td>{$request->date_add|date_format:'Y-m-d H:i:s'}</td>
@@ -34,7 +34,7 @@
                 >
                   <i class="icon-caret-down"></i>&nbsp;
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" style="cursor: pointer;">
                   <li disabled="disabled">
                     <a disabled="disabled"
                        title="{l s='Deny' mod='tbgdpr'}"

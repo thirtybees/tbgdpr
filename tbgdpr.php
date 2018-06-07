@@ -61,6 +61,8 @@ class TbGdpr extends Module
 
     const OBJECT_ENABLED = 'TBGDPR_OBJECT_ENABLED';
     const OBJECT_TEXT = 'TBGDPR_OBJECT_TEXT';
+    const OBJECT_EMAIL_EXPIRE = 'TBGDPR_OE_EXPIRE';
+    const OBJECT_EMAIL_EXPIRE_DEFAULT = 15;
 
     const NOTIFICATION_ENABLED = 'TBGDPR_NOTIFICATION_ENABLED';
     const NOTIFICATION_TEXT = 'TBGDPR_NOTIFICATION_TEXT';
@@ -338,13 +340,14 @@ class TbGdpr extends Module
             static::NOTIFICATION_TEXT           => Configuration::getInt(static::NOTIFICATION_TEXT),
             static::OBJECT_ENABLED              => (bool) Configuration::get(static::OBJECT_ENABLED),
             static::OBJECT_TEXT                 => Configuration::getInt(static::OBJECT_TEXT),
-            static::RESTRICT_ENABLED        => (bool) Configuration::get(static::RESTRICT_ENABLED),
-            static::RESTRICT_TEXT           => Configuration::getInt(static::RESTRICT_TEXT),
-            static::DATAPORTABILITY_ENABLED => (bool) Configuration::get(static::DATAPORTABILITY_ENABLED),
-            static::DATAPORTABILITY_TEXT    => Configuration::getInt(static::DATAPORTABILITY_TEXT),
-            static::FORGOTTEN_ENABLED       => (bool) Configuration::get(static::FORGOTTEN_ENABLED),
-            static::FORGOTTEN_NEEDS_CONFIRM => (bool) Configuration::get(static::FORGOTTEN_NEEDS_CONFIRM),
-            static::FORGOTTEN_TEXT          => Configuration::getInt(static::FORGOTTEN_TEXT),
+            static::OBJECT_EMAIL_EXPIRE         => (int) (Configuration::getInt(static::OBJECT_EMAIL_EXPIRE) ?: static::OBJECT_EMAIL_EXPIRE_DEFAULT),
+            static::RESTRICT_ENABLED            => (bool) Configuration::get(static::RESTRICT_ENABLED),
+            static::RESTRICT_TEXT               => Configuration::getInt(static::RESTRICT_TEXT),
+            static::DATAPORTABILITY_ENABLED     => (bool) Configuration::get(static::DATAPORTABILITY_ENABLED),
+            static::DATAPORTABILITY_TEXT        => Configuration::getInt(static::DATAPORTABILITY_TEXT),
+            static::FORGOTTEN_ENABLED           => (bool) Configuration::get(static::FORGOTTEN_ENABLED),
+            static::FORGOTTEN_NEEDS_CONFIRM     => (bool) Configuration::get(static::FORGOTTEN_NEEDS_CONFIRM),
+            static::FORGOTTEN_TEXT              => Configuration::getInt(static::FORGOTTEN_TEXT),
         ];
     }
 

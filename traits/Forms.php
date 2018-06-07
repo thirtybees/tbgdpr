@@ -728,6 +728,12 @@ trait Forms
                         'lang'         => true,
                         'autoload_rte' => false,
                     ],
+                    [
+                        'type'         => 'text',
+                        'label'        => $this->l('Minutes before email verification expires', 'Forms'),
+                        'name'         => static::OBJECT_EMAIL_EXPIRE,
+                        'required'     => true,
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->l('Save', 'Forms'),

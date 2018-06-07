@@ -52,6 +52,18 @@ trait Installation
      */
     public function install()
     {
+        if (version_compare(phpversion(), '5.6.0', '<')) {
+            $this->context->controller->errors[] = sprintf($this->l('Unable to install - your store is not GDPR compliant: %s'), $this->l('Your PHP version is end-of-life'));
+        }
+
+        // random_bytes should be secure and not throw an exception
+        try {
+            random_bytes(64);
+        } catch (\Exception $e) {
+            $this->context->controller->errors[] = sprintf($this->l('Unable to install - your store is not GDPR compliant: %s'), $e->getMessage());
+            return false;
+        }
+
         $this->installFrontControllerOverride();
         $this->installDefaultSettings();
 

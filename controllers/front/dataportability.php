@@ -95,22 +95,4 @@ class TbGdprDataportabilityModuleFrontController extends ModuleFrontController
             }
         }
     }
-
-    /**
-     * Checks if token is valid.
-     *
-     * @return bool
-     *
-     * @since   1.0.0
-     *
-     * @throws PrestaShopException
-     */
-    public function isTokenValid()
-    {
-        if (!Configuration::get('PS_TOKEN_ENABLE')) {
-            return true;
-        }
-
-        return strcasecmp(Tools::getToken('dataportability'), Tools::getValue('csrf')) === 0;
-    }
 }

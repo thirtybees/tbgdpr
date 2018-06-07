@@ -25,6 +25,8 @@ div.sidebar.navigation a.active > span.badge-module-tabs {
     transition: opacity 0.2s ease-in-out;
     border-radius: 0;
     background: #fafafa!important;
+    float: left!important;
+    margin-right: 4px!important;
 }
 
 .panel.module-card:hover {

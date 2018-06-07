@@ -26,6 +26,8 @@ if (!defined('_PS_VERSION_')) {
  */
 class TbGdprObjectModuleFrontController extends ModuleFrontController
 {
+    use \TbGdprModule\Csrf;
+
     /** @var bool $display_column_left */
     public $display_column_left = false;
     /** @var bool $display_column_right */
@@ -34,7 +36,6 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
     public $confirmations = [];
     /** @var array $warnings */
     public $warnings = [];
-
 
     /**
      * @throws PrestaShopDatabaseException
@@ -53,8 +54,6 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
             'csrf'                => Tools::getToken('object'),
             'confirmations'       => $this->confirmations,
             'tbgdpr_object'       => Configuration::getInt(TbGdpr::OBJECT_TEXT)[$this->context->language->id],
-            /*'customerEmail'       => $customer->email,
-            'customerMobilePhone' => $customerMobilePhone*/
         ));
 
         $this->setTemplate('object.tpl');
@@ -71,7 +70,7 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
     {
         // submit customer object to direct marketing
         if (Tools::isSubmit('gdpr-customer-object')) {
-            if (!$this->isTokenValid()) {
+            if (!$this->isCsrfTokenValid()) {
                 $this->errors[] = $this->module->l('Unable to confirm request', 'object');
                 return;
             }
@@ -91,9 +90,9 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
                     $result = $request->execute();
 
                     if ($result) {
-                        $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes');
+                        $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes', 'object');
                     } else {
-                        $this->errors[] = $this->module->l('An error has occurred. Please contact customer support');
+                        $this->errors[] = $this->module->l('An error has occurred. Please contact customer support', 'object');
                     }
                 }
             } else {
@@ -102,7 +101,7 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
         }
         // submit guest object to direct marketing
         if (Tools::isSubmit('gdpr-guest-object')) {
-            if (!$this->isTokenValid()) {
+            if (!$this->isCsrfTokenValid()) {
                 $this->errors[] = $this->module->l('Unable to confirm request', 'object');
                 return;
             }
@@ -128,32 +127,14 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
                     $result = Hook::exec('actionUnsubscribeMember', ['customer' => $request->id_customer, 'guest' => $request->id_guest, 'email' => $request->email, 'phone' => null]);
 
                     if ($result) {
-                        $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes');
+                        $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes', 'object');
                     } else {
-                        $this->errors[] = $this->module->l('An error has occurred. Please contact customer support');
+                        $this->errors[] = $this->module->l('An error has occurred. Please contact customer support', 'object');
                     }
                 }
             } else {
                 $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to be removed from all direct marketing purposes', 'object');
             }
         }
-    }
-
-    /**
-     * Checks if token is valid.
-     *
-     * @return bool
-     *
-     * @since   1.0.0
-     *
-     * @throws PrestaShopException
-     */
-    public function isTokenValid()
-    {
-        if (!Configuration::get('PS_TOKEN_ENABLE')) {
-            return true;
-        }
-
-        return strcasecmp(Tools::getToken('object'), Tools::getValue('csrf')) === 0;
     }
 }

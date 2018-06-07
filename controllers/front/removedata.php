@@ -26,6 +26,8 @@ if (!defined('_PS_VERSION_')) {
  */
 class TbGdprRemovedataModuleFrontController extends ModuleFrontController
 {
+    use \TbGdprModule\Csrf;
+
     /** @var bool $display_column_left */
     public $display_column_left = false;
     /** @var bool $display_column_right */
@@ -69,7 +71,7 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
     {
         //submit removal request
         if (Tools::isSubmit('gdpr-remove')) {
-            if (!$this->isTokenValid()) {
+            if (!$this->isCsrfTokenValid()) {
                 $this->errors[] = $this->module->l('Unable to confirm request', 'removedata');
                 return;
             }
@@ -91,44 +93,26 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
                     if (!Configuration::get(TbGdpr::FORGOTTEN_NEEDS_CONFIRM)) {
                         $result = $request->execute();
                         if ($result) {
-                            $this->confirmations[] = $this->module->l('Your personal data has been removed');
+                            $this->confirmations[] = $this->module->l('Your personal data has been removed.', 'removedata');
                         } else {
-                            $this->errors[] = $this->module->l('An error has occurred. Please contact customer support');
+                            $this->errors[] = $this->module->l('An error has occurred. Please contact customer support.', 'removedata');
                         }
                     } else {
-                        $this->confirmations[] = $this->module->l('You request has been received and will be processed as soon as possible', 'removedata');
+                        $this->confirmations[] = $this->module->l('You request has been received and will be processed as soon as possible.', 'removedata');
                     }
                 }
             } else {
-                $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to request your data to be removed', 'removedata');
+                $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to request your data to be removed.', 'removedata');
             }
         } elseif (Tools::getValue('cancel-gdpr-remove')) {
-            if (!$this->isTokenValid()) {
-                $this->errors[] = $this->module->l('Unable to confirm request', 'removedata');
+            if (!$this->isCsrfTokenValid()) {
+                $this->errors[] = $this->module->l('Unable to confirm request.', 'removedata');
                 return;
             }
             $request = TbGdprRequest::getRemovalRequestForGuest($this->context->cookie->id_guest);
             $request->delete();
 
-            $this->confirmations[] = $this->module->l('Your request has been canceled', 'removedata');
+            $this->confirmations[] = $this->module->l('Your request has been canceled.', 'removedata');
         }
-    }
-
-    /**
-     * Checks if token is valid.
-     *
-     * @return bool
-     *
-     * @since   1.0.0
-     *
-     * @throws PrestaShopException
-     */
-    public function isTokenValid()
-    {
-        if (!Configuration::get('PS_TOKEN_ENABLE')) {
-            return true;
-        }
-
-        return strcasecmp(Tools::getToken('removedata'), Tools::getValue('csrf')) === 0;
     }
 }
