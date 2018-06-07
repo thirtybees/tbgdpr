@@ -22,6 +22,7 @@ namespace TbGdprModule;
 use Adapter_Exception;
 use Configuration;
 use Error;
+use Exception;
 use Language;
 use PrestaShopDatabaseException;
 use PrestaShopException;
@@ -31,6 +32,7 @@ use TbGdprModule\PhpParser\NodeTraverser;
 use TbGdprModule\PhpParser\ParserFactory;
 use TbGdprModule\PhpParser\PrettyPrinter\Standard as StandardPrinter;
 use TbGdprModule\Tools as GdprTools;
+use TbGdprRequest;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -58,8 +60,11 @@ trait Installation
 
         // random_bytes should be secure and not throw an exception
         try {
+            if (!function_exists('random_bytes')) {
+                throw new Exception('random_bytes function does not exist');
+            }
             random_bytes(64);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->context->controller->errors[] = sprintf($this->l('Unable to install - your store is not GDPR compliant: %s'), $e->getMessage());
             return false;
         }
@@ -67,7 +72,7 @@ trait Installation
         $this->installFrontControllerOverride();
         $this->installDefaultSettings();
 
-        \TbGdprRequest::createDatabase();
+        TbGdprRequest::createDatabase();
 
         return parent::install() &&
             $this->registerHook('header') &&
