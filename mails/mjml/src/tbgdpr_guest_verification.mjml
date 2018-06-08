@@ -12,7 +12,7 @@
       </mj-column>
     </mj-section>
     <mj-section mj-class="section">
-      <mj-text>${{ lang.dear_customer }}$,</mj-text>
+      <mj-text>${{ lang.hello }}$,</mj-text>
     </mj-section>
     <mj-section mj-class="section">
       <mj-column mj-class="background-hero">

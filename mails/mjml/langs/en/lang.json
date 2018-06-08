@@ -1,5 +1,6 @@
 {
   "hi_firstname_lastname": "Hi {firstname} {lastname}",
+  "hello": "Hello",
   "dear_customer": "Dear Customer",
   "unsubscribe_from_our_marketing": "Unsubscribe from our marketing",
   "shop_name_powered_by_prestashop": "<a href=\"{shop_url}\">{shop_name}</a>",

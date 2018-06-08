@@ -35,6 +35,18 @@ if (!defined('_PS_VERSION_')) {
 trait Csrf
 {
     /**
+     * Generate a CSRF token
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    protected function generateCsrfToken()
+    {
+        return Tools::getToken(get_class());
+    }
+
+    /**
      * Checks if token is valid.
      *
      * @return bool
@@ -43,12 +55,12 @@ trait Csrf
      *
      * @throws PrestaShopException
      */
-    public function isCsrfTokenValid()
+    public function verifyCsrfToken()
     {
         if (!Configuration::get('PS_TOKEN_ENABLE')) {
             return true;
         }
 
-        return strcasecmp(Tools::getToken('dataportability'), Tools::getValue('csrf')) === 0;
+        return strcasecmp(Tools::getToken(get_class()), Tools::getValue('csrf')) === 0;
     }
 }

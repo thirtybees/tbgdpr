@@ -17,6 +17,8 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
+use TbGdprModule\Tools as GdprTools;
+
 if (!defined('_PS_VERSION_')) {
     return;
 }
@@ -301,6 +303,62 @@ class TbGdprObjectModel extends ObjectModel
     }
 
     /**
+     * Formats values of each fields.
+     *
+     * @param int $type   FORMAT_COMMON or FORMAT_LANG or FORMAT_SHOP
+     * @param int $idLang If this parameter is given, only take lang fields
+     *
+     * @return array
+     *
+     * @since   1.0.0
+     * @throws PrestaShopException
+     * @throws HTMLPurifier_Exception
+     */
+    protected function formatFields($type, $idLang = null)
+    {
+        $fields = [];
+
+        // Set primary key in fields
+        if (isset($this->id)) {
+            $fields[$this->def['primary']] = $this->id;
+        }
+
+        foreach ($this->def['fields'] as $field => $data) {
+            // Only get fields we need for the type
+            // E.g. if only lang fields are filtered, ignore fields without lang => true
+            if (($type == static::FORMAT_LANG && empty($data['lang']))
+                || ($type == static::FORMAT_SHOP && empty($data['shop']))
+                || ($type == static::FORMAT_COMMON && ((!empty($data['shop']) && $data['shop'] != 'both') || !empty($data['lang'])))) {
+                continue;
+            }
+
+            if (is_array($this->update_fields)) {
+                if ((!empty($data['lang']) || (!empty($data['shop']) && $data['shop'] != 'both')) && (empty($this->update_fields[$field]) || ($type == static::FORMAT_LANG && empty($this->update_fields[$field][$idLang])))) {
+                    continue;
+                }
+            }
+
+            // Get field value, if value is multilang and field is empty, use value from default lang
+            $value = $this->$field;
+            if ($type == static::FORMAT_LANG && $idLang && is_array($value)) {
+                if (!empty($value[$idLang])) {
+                    $value = $value[$idLang];
+                } elseif (!empty($data['required'])) {
+                    $value = $value[Configuration::get('PS_LANG_DEFAULT')];
+                } else {
+                    $value = '';
+                }
+            }
+
+            $purify = (isset($data['validate']) && mb_strtolower($data['validate']) == 'iscleanhtml') ? true : false;
+            // Format field value
+            $fields[$field] = static::formatValue($value, $data['type'], false, $purify, !empty($data['allow_null']));
+        }
+
+        return $fields;
+    }
+
+    /**
      * Formats a value
      *
      * @param mixed $value
@@ -360,7 +418,7 @@ class TbGdprObjectModel extends ObjectModel
                 return $value;
 
             case self::TYPE_HEX:
-                return 'x\''.dechex(hexdec($value)).'\'';
+                return ['type' => 'sql', 'value' => '0x'.GdprTools::sanitizeHex($value)];
 
             case self::TYPE_STRING:
             default :
@@ -369,5 +427,76 @@ class TbGdprObjectModel extends ObjectModel
                 }
                 return pSQL($value);
         }
+    }
+
+    /**
+     * Takes current object ID, gets its values from database,
+     * saves them in a new row and loads newly saved values as a new object.
+     *
+     * @return ObjectModel|false
+     * @throws HTMLPurifier_Exception
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws ReflectionException
+     *
+     * @since   1.0.0
+     */
+    public function duplicateObject()
+    {
+        $definition = ObjectModel::getDefinition($this);
+
+        $res = Db::getInstance()->getRow('
+					SELECT *
+					FROM `'._DB_PREFIX_.bqSQL($definition['table']).'`
+					WHERE `'.bqSQL($definition['primary']).'` = '.(int) $this->id
+        );
+        if (!$res) {
+            return false;
+        }
+
+        unset($res[$definition['primary']]);
+        foreach ($res as $field => &$value) {
+            if (isset($definition['fields'][$field])) {
+                $value = static::formatValue($value, $definition['fields'][$field]['type'], false, true, !empty($definition['fields'][$field]['allow_null']));
+            }
+        }
+
+        if (!Db::getInstance()->insert($definition['table'], $res)) {
+            return false;
+        }
+
+        $objectId = Db::getInstance()->Insert_ID();
+
+        if (isset($definition['multilang']) && $definition['multilang']) {
+            $result = Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
+			WHERE `'.bqSQL($definition['primary']).'` = '.(int) $this->id);
+            if (!$result) {
+                return false;
+            }
+
+            foreach ($result as &$row) {
+                foreach ($row as $field => &$value) {
+                    if (isset($definition['fields'][$field])) {
+                        $value = static::formatValue($value, $definition['fields'][$field]['type'], false, true, !empty($definition['fields'][$field]['allow_null']));
+                    }
+                }
+            }
+
+            // Keep $row2, you cannot use $row because there is an unexplicated conflict with the previous usage of this variable
+            foreach ($result as $row2) {
+                $row2[$definition['primary']] = (int) $objectId;
+                if (!Db::getInstance()->insert($definition['table'].'_lang', $row2)) {
+                    return false;
+                }
+            }
+        }
+
+        /** @var ObjectModel $objectDuplicated */
+        $objectDuplicated = new $definition['classname']((int) $objectId);
+        $objectDuplicated->duplicateShops((int) $this->id);
+
+        return $objectDuplicated;
     }
 }

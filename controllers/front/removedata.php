@@ -71,7 +71,7 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
     {
         //submit removal request
         if (Tools::isSubmit('gdpr-remove')) {
-            if (!$this->isCsrfTokenValid()) {
+            if (!$this->verifyCsrfToken()) {
                 $this->errors[] = $this->module->l('Unable to confirm request', 'removedata');
                 return;
             }
@@ -105,7 +105,7 @@ class TbGdprRemovedataModuleFrontController extends ModuleFrontController
                 $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to request your data to be removed.', 'removedata');
             }
         } elseif (Tools::getValue('cancel-gdpr-remove')) {
-            if (!$this->isCsrfTokenValid()) {
+            if (!$this->verifyCsrfToken()) {
                 $this->errors[] = $this->module->l('Unable to confirm request.', 'removedata');
                 return;
             }

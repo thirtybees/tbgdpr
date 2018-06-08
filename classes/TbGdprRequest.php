@@ -99,7 +99,8 @@ class TbGdprRequest extends TbGdprObjectModel
         switch ($this->request_type) {
             case static::REQUEST_TYPE_REMOVE_DATA:
                 $customer = new Customer($this->id_customer);
-                $result = Hook::exec('actionDeleteGdprCustomer', ['email' => $customer->email, 'id_customer' => $customer->id, 'id_guest' => $customer->id_guest]);
+                Hook::exec('actionDeleteGdprCustomer', ['email' => $customer->email, 'id_customer' => $customer->id, 'id_guest' => $customer->id_guest]);
+                $result = true;
                 break;
             case static::REQUEST_TYPE_GET_DATA:
                 $customer = new Customer($this->id_customer);
@@ -110,7 +111,8 @@ class TbGdprRequest extends TbGdprObjectModel
             case static::REQUEST_TYPE_OBJECT:
                 $customer = new Customer($this->id_customer);
                 $customerMobilePhone = Address::initialize(Address::getFirstCustomerAddressId(Context::getContext()->customer->id))->phone_mobile;
-                $result = Hook::exec('actionUnsubscribeMember', ['customer' => $customer->id, 'guest' => $customer->id_guest, 'email' => $customer->email, 'phone' => $customerMobilePhone]);
+                Hook::exec('actionUnsubscribeMember', ['customer' => $customer->id, 'guest' => $customer->id_guest, 'email' => $customer->email, 'phone' => $customerMobilePhone]);
+                $result = true;
                 break;    
         }
 
@@ -168,7 +170,7 @@ class TbGdprRequest extends TbGdprObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if (Validate::isEmail($this->email)) {
-            $this->email = hash('sha256', $this->email);
+            $this->email = hash('sha512', $this->email);
         }
 
         if (!$this->id_shop) {
@@ -309,7 +311,7 @@ class TbGdprRequest extends TbGdprObjectModel
             $idShop = Context::getContext()->shop->id;
         }
         if (Validate::isEmail($email)) {
-            $email = hash('sha256', $email);
+            $email = hash('sha512', $email);
         }
 
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(

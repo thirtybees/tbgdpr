@@ -23,9 +23,9 @@
   <span class="navigation_page">{l s='Unsubscribe' mod='tbgdpr'}</span>
 {/capture}
 
-{include file="./misc/errors.tpl"}
-{include file="./misc/warnings.tpl"}
-{include file="./misc/confirmations.tpl"}
+{include file="../misc/errors.tpl"}
+{include file="../misc/warnings.tpl"}
+{include file="../misc/confirmations.tpl"}
 
 <h1 class="page-heading">{l s='Unsubscribe' mod='tbgdpr'}</h1>
 

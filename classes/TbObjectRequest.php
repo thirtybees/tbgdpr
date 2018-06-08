@@ -18,6 +18,7 @@
  */
 
 use TbGdprModule\Exception\AlreadyRequestedException;
+use TbGdprModule\Tools as GdprTools;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -50,17 +51,17 @@ class TbObjectRequest extends TbGdprObjectModel
      * @see ObjectModel::$definition
      */
     public static $definition = [
-        'table'     => 'tbobject_request',
-        'primary'   => 'id_tbobject_request',
-        'fields'    => [
-            'email'        => ['type' => self::TYPE_STRING, 'validate' => 'isString',      'required' => false, 'db_type' => 'VARCHAR(255)'],
-            'status'       => ['type' => self::TYPE_INT,    'validate' => 'isUnsignedInt', 'required' => true,  'db_type' => 'INT(11) UNSIGNED'],
-            'id_shop'      => ['type' => self::TYPE_INT,    'validate' => 'isUnsignedInt', 'required' => true,  'db_type' => 'INT(11) UNSIGNED'],
-            'token'        => ['type' => self::TYPE_HEX,    'validate' => 'isString',      'required' => false, 'db_type' => 'BINARY(64)'],
-            'expires'      => ['type' => self::TYPE_DATE,   'validate' => 'isDate',        'required' => true,  'db_type' => 'DATETIME'],
-            'date_add'     => ['type' => self::TYPE_DATE,   'validate' => 'isDate',                             'db_type' => 'DATETIME'],
-            'date_upd'     => ['type' => self::TYPE_DATE,   'validate' => 'isDate',                             'db_type' => 'DATETIME'],
-        ]
+        'table'   => 'tbgdpr_object_request',
+        'primary' => 'id_tbgdpr_object_request',
+        'fields'  => [
+            'email'    => ['type' => self::TYPE_STRING, 'validate' => 'isString',      'required' => false, 'db_type' => 'VARCHAR(255)'],
+            'status'   => ['type' => self::TYPE_INT,    'validate' => 'isUnsignedInt', 'required' => true,  'db_type' => 'INT(11) UNSIGNED'],
+            'id_shop'  => ['type' => self::TYPE_INT,    'validate' => 'isUnsignedInt', 'required' => true,  'db_type' => 'INT(11) UNSIGNED'],
+            'token'    => ['type' => self::TYPE_HEX,    'validate' => 'isString',      'required' => false, 'db_type' => 'BINARY(64)'],
+            'expires'  => ['type' => self::TYPE_DATE,   'validate' => 'isDate',        'required' => true,  'db_type' => 'DATETIME'],
+            'date_add' => ['type' => self::TYPE_DATE,   'validate' => 'isDate',                             'db_type' => 'DATETIME'],
+            'date_upd' => ['type' => self::TYPE_DATE,   'validate' => 'isDate',                             'db_type' => 'DATETIME'],
+        ],
     ];
 
     /**
@@ -78,13 +79,13 @@ class TbObjectRequest extends TbGdprObjectModel
      *
      * @since 1.0.0
      */
-    public function create($email, $idShop = null)
+    public static function create($email, $idShop = null)
     {
         if (!$idShop) {
             $idShop = Context::getContext()->shop->id;
         }
-        if (TbGdprRequest::existsForEmail($email, TbGdprRequest::REQUEST_TYPE_OBJECT)) {
-            throw new \TbGdprModule\Exception\AlreadyRequestedException('Already requested');
+        if ($request = static::existsForEmail($email)) {
+            throw new \TbGdprModule\Exception\AlreadyRequestedException('Already requested', 0, null, $request);
         }
 
         $objectRequest = new static();
@@ -102,6 +103,46 @@ class TbObjectRequest extends TbGdprObjectModel
     }
 
     /**
+     * Auto add id_shop
+     *
+     * @param bool $autoDate
+     * @param bool $nullValues
+     *
+     * @return bool|void
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public function add($autoDate = true, $nullValues = false)
+    {
+        if (!$this->id_shop) {
+            $this->id_shop = Context::getContext()->shop->id;
+        }
+        if (!$this->token) {
+            $this->token = static::createToken();
+        }
+
+        parent::add($autoDate, $nullValues);
+    }
+
+    /**
+     * Delete this object request
+     *
+     * @return bool
+     *
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public function delete()
+    {
+        static::flushExpired();
+
+        return parent::delete();
+    }
+
+    /**
      * Verify email address
      *
      * @param string $token
@@ -115,7 +156,7 @@ class TbObjectRequest extends TbGdprObjectModel
      */
     public function verify($token, $email)
     {
-        if ($token === $this->token && $email === $this->email) {
+        if (strcasecmp($token, $this->token) && $email === $this->email) {
             $this->status = static::STATUS_VERIFIED;
             $this->save();
 
@@ -135,5 +176,87 @@ class TbObjectRequest extends TbGdprObjectModel
     protected static function createToken()
     {
         return hash('sha512', random_bytes(64));
+    }
+
+    /**
+     * Check if there is a request for the given email address
+     * If it already exists the request object will be returned
+     *
+     * @param string $email
+     *
+     * @return false|TbObjectRequest
+     *
+     * @throws Adapter_Exception
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public static function existsForEmail($email)
+    {
+        static::flushExpired();
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+            (new DbQuery())
+                ->select('*')
+                ->from(bqSQL(static::$definition['table']))
+                ->where('`email` = \''.pSQL($email).'\'')
+        );
+        if (!is_array($row) || empty($row)) {
+            return false;
+        }
+
+        $request = new static();
+        $request->hydrate($row);
+
+        return $request;
+    }
+
+    /**
+     * Get Object Request by unsubscribe token
+     *
+     * @param string $token
+     *
+     * @return false|TbObjectRequest
+     *
+     * @throws Adapter_Exception
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public static function getByToken($token)
+    {
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+            (new DbQuery())
+                ->select('*, HEX(`token`)')
+                ->from(bqSQL(static::$definition['table']))
+                ->where('`token` = 0x'.pSQL(GdprTools::sanitizeHex($token)))
+        );
+        if (!is_array($row) || empty($row)) {
+            return false;
+        }
+
+        $request = new static();
+        $request->hydrate($row);
+
+        return $request;
+    }
+
+    /**
+     * Flush expired requests
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public static function flushExpired()
+    {
+        $ttl = (int) (Configuration::get(TbGdpr::OBJECT_EMAIL_EXPIRE) ?: TbGdpr::OBJECT_EMAIL_EXPIRE_DEFAULT);
+        // Check for expired entries as well
+        Db::getInstance(_PS_USE_SQL_SLAVE_)->delete(
+            bqSQL(static::$definition['table']),
+            '`date_add` < \''.date('Y-m-d H:i:s', strtotime("-$ttl mins")).'\''
+        );
     }
 }

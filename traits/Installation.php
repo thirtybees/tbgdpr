@@ -28,6 +28,7 @@ use PrestaShopDatabaseException;
 use PrestaShopException;
 use ReflectionClass;
 use ReflectionException;
+use TbGdprModule\Exception\GdprException;
 use TbGdprModule\PhpParser\NodeTraverser;
 use TbGdprModule\PhpParser\ParserFactory;
 use TbGdprModule\PhpParser\PrettyPrinter\Standard as StandardPrinter;
@@ -187,6 +188,36 @@ trait Installation
                 $value = $default;
             }
             Configuration::updateGlobalValue($key, $value);
+        }
+    }
+
+    /**
+     * Install email templates
+     *
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    protected function installEmailTemplates()
+    {
+        if (!file_exists(_PS_THEME_DIR_."modules/{$this->name}/")) {
+            @mkdir(_PS_THEME_DIR_."modules/{$this->name}/");
+        }
+        if (!file_exists(_PS_THEME_DIR_."modules/{$this->name}/mails/")) {
+            @mkdir(_PS_THEME_DIR_."modules/{$this->name}/mails/");
+        }
+        foreach (Language::getLanguages(false) as $language) {
+            $iso = strtolower($language['iso_code']);
+            if (!file_exists(__DIR__."/../mails/{$iso}/")) {
+                GdprTools::xcopy(__DIR__."/../mails/en/", __DIR__."/../mails/{$iso}/");
+                if (!file_exists(_PS_THEME_DIR_."modules/{$this->name}/mails/{$iso}/")) {
+                    GdprTools::xcopy(__DIR__."/../mails/en/", _PS_THEME_DIR_."modules/{$this->name}/mails/{$iso}/");
+                }
+            } else {
+                if (!file_exists(_PS_THEME_DIR_."modules/{$this->name}/mails/{$iso}/")) {
+                    GdprTools::xcopy(__DIR__."/../mails/{$iso}/", _PS_THEME_DIR_."modules/{$this->name}/mails/{$iso}/");
+                }
+            }
         }
     }
 

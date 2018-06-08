@@ -25,6 +25,9 @@ require_once __DIR__.'/vendor/autoload.php';
 
 /**
  * Class TbGdpr
+ *
+ * // Translations, please leave them in this file:
+ * $this->l('Please verify your email address');
  */
 class TbGdpr extends Module
 {
@@ -171,6 +174,7 @@ class TbGdpr extends Module
      */
     public function getContent()
     {
+        $this->installEmailTemplates();
         $this->postProcess();
         $this->context->smarty->assign([
             'configLink' => $this->context->link->getAdminLink('AdminTbGdprConfigure'),
@@ -359,7 +363,7 @@ class TbGdpr extends Module
      */
     public function generateWidgetSettings()
     {
-        $widgetSettings = array()
+        $widgetSettings = []
             + $this->getWidgetPosition()
             + $this->getWidgetLayout();
 

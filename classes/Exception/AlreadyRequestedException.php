@@ -19,10 +19,47 @@
 
 namespace TbGdprModule\Exception;
 
+use TbGdprRequest;
+use TbObjectRequest;
+use Throwable;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+/**
+ * Class AlreadyRequestedException
+ *
+ * @package TbGdprModule\Exception
+ */
 class AlreadyRequestedException extends GdprException
 {
+    /** @var TbObjectRequest|TbGdprRequest $request */
+    private $request;
+
+    /**
+     * AlreadyRequestedException constructor.
+     *
+     * @param string         $message
+     * @param int            $code
+     * @param Throwable|null $previous
+     * @param                $request
+     */
+    public function __construct($message = "", $code = 0, Throwable $previous = null, $request)
+    {
+        parent::__construct($message, $code, $previous);
+        $this->request = $request;
+    }
+
+    /**
+     * Get request
+     *
+     * @return TbGdprRequest|TbObjectRequest
+     *
+     * @since 1.0.0
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
 }

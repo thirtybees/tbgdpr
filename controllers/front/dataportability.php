@@ -45,11 +45,11 @@ class TbGdprDataportabilityModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'csrf'               => Tools::getToken('dataportability'),
             'confirmations'       => $this->confirmations,
             'tbgdpr_portability' => Configuration::getInt(TbGdpr::DATAPORTABILITY_TEXT)[$this->context->language->id]
-        ));
+        ]);
 
         $this->setTemplate('dataportability.tpl');
     }
