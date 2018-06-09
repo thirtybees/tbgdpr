@@ -122,7 +122,15 @@ class TbGdpr extends Module
 
         $this->controllers = [
             'ajax',
+            'anonymous',
+            'dataportability',
+            'informed',
+            'notification',
+            'object',
             'overview',
+            'correct',
+            'removedata',
+            'restrict',
         ];
 
         if (isset(Context::getContext()->employee->id) && Context::getContext()->employee->id) {

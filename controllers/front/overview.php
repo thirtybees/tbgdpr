@@ -51,8 +51,27 @@ class TbGdprOverviewModuleFrontController extends ModuleFrontController
     }
 
     /**
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     *
+     * @since 1.0.0
+     */
+    public function setMedia()
+    {
+        $result = parent::setMedia();
+
+        $this->addJS(_PS_MODULE_DIR_."{$this->module->name}/views/js/matchheight.js");
+
+        return $result;
+    }
+
+    /**
      * @return array
      * @throws PrestaShopException
+     *
+     * @since 1.0.0
      */
     public function getBlocks()
     {
@@ -68,7 +87,7 @@ class TbGdprOverviewModuleFrontController extends ModuleFrontController
                 'title' => $this->module->l('Rectify information', 'overview'),
                 'description' => $this->module->l('Update your information if your personal data is incomplete or incorrect.', 'overview'),
                 'controller' => 'correct',
-                'link'        => $this->context->link->getPageLink('identity', true),
+                'link'        => $this->context->link->getModuleLink($this->module->name, 'correct', [], true),
                 'icon'        => 'shield',
             ],
             'anonymous' => [
@@ -116,13 +135,13 @@ class TbGdprOverviewModuleFrontController extends ModuleFrontController
         ];
 
         $enabledBlocks = [
-            'informed'        => Configuration::get(TbGdpr::INFORMED_ENABLED),
-            'correct'         => Configuration::get(TbGdpr::CORRECTED_ENABLED),
-            'anonymous'       => Configuration::get(TbGdpr::ANONYMOUS_ENABLED),
-            'restrict'        => Configuration::get(TbGdpr::RESTRICT_ENABLED),
+            'informed'        => Configuration::get(TbGdpr::INFORMED_ENABLED) && trim(Configuration::getInt(TbGdpr::INFORMED_TEXT)[$this->context->language->id]),
+            'correct'         => Configuration::get(TbGdpr::CORRECTED_ENABLED) && trim(Configuration::getInt(TbGdpr::CORRECTED_TEXT)[$this->context->language->id]),
+            'anonymous'       => Configuration::get(TbGdpr::ANONYMOUS_ENABLED) && trim(Configuration::getInt(TbGdpr::ANONYMOUS_TEXT)[$this->context->language->id]),
+            'restrict'        => Configuration::get(TbGdpr::RESTRICT_ENABLED) && trim(Configuration::getInt(TbGdpr::RESTRICT_TEXT)[$this->context->language->id]),
             'object'          => Configuration::get(TbGdpr::OBJECT_ENABLED),
-            'notification'    => Configuration::get(TbGdpr::NOTIFICATION_ENABLED),
-            'dataportability' => Configuration::get(TbGdpr::DATAPORTABILITY_ENABLED),
+            'notification'    => Configuration::get(TbGdpr::NOTIFICATION_ENABLED) && trim(Configuration::getInt(TbGdpr::NOTIFICATION_TEXT)[$this->context->language->id]),
+            'dataportability' => Configuration::get(TbGdpr::DATAPORTABILITY_ENABLED) && trim(Configuration::getInt(TbGdpr::DATAPORTABILITY_TEXT)[$this->context->language->id]),
             'removedata'      => Configuration::get(TbGdpr::FORGOTTEN_ENABLED),
         ];
 

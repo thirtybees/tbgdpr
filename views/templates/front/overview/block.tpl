@@ -15,7 +15,7 @@
  *  @copyright 2017-2018 thirty bees
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-<div class="col-lg-3 col-md-4 col-sm-6">
+<div class="col-lg-4 col-md-6 col-sm-6">
   <a href="{$block.link|escape:'htmlall':'UTF-8'}">
     <div class="panel gdpr-overview-panel">
       <div class="panel-heading  gdpr-overview-panel-heading">
@@ -24,7 +24,7 @@
           {$block.title|escape:'htmlall':'UTF-8'}
         </h3>
       </div>
-      <div class="panel-body">
+      <div class="panel-body" data-mh="1">
         <p>{$block.description|escape:'htmlall':'UTF-8'}</p>
       </div>
       <div class="panel-body">
