@@ -47,7 +47,7 @@ class TbGdprOverviewModuleFrontController extends ModuleFrontController
         ]);
 
         $this->addCSS($this->module->getLocalPath().'views/css/front.css');
-        $this->setTemplate('overview.tpl');
+        $this->setTemplate('overview/main.tpl');
     }
 
     /**

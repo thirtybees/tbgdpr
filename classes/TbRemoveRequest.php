@@ -22,15 +22,15 @@ if (!defined('_PS_VERSION_')) {
 }
 
 /**
- * Class TbObjectRequest
+ * Class TbRemoveRequest
  */
-class TbObjectRequest extends TbVisitorRequest
+class TbRemoveRequest extends TbVisitorRequest
 {
     const STATUS_PENDING = 1;
     const STATUS_VERIFIED = 2;
 
-    const EXPIRE_CONST = TbGdpr::OBJECT_EMAIL_EXPIRE;
-    const EXPIRE_CONST_DEFAULT = TbGdpr::OBJECT_EMAIL_EXPIRE_DEFAULT;
+    const EXPIRE_CONST = TbGdpr::FORGOTTEN_EMAIL_EXPIRE;
+    const EXPIRE_CONST_DEFAULT = TbGdpr::FORGOTTEN_EMAIL_EXPIRE_DEFAULT;
 
     /** @var string $email */
     public $email;
@@ -51,8 +51,8 @@ class TbObjectRequest extends TbVisitorRequest
      * @see ObjectModel::$definition
      */
     public static $definition = [
-        'table'   => 'tbgdpr_object_request',
-        'primary' => 'id_tbgdpr_object_request',
+        'table'   => 'tbgdpr_remove_request',
+        'primary' => 'id_tbgdpr_remove_request',
         'fields'  => [
             'email'    => ['type' => self::TYPE_STRING, 'validate' => 'isString',      'required' => false, 'db_type' => 'VARCHAR(255)'],
             'status'   => ['type' => self::TYPE_INT,    'validate' => 'isUnsignedInt', 'required' => true,  'db_type' => 'INT(11) UNSIGNED'],

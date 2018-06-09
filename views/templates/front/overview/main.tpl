@@ -31,7 +31,7 @@
 
 <div class="links clearfix" data-mh="gdpr-block">
   {foreach $tbgdpr_blocks as $block}
-    {include file="./overview/block.tpl"}
+    {include file="../overview/block.tpl"}
   {/foreach}
 </div>
 <h2 class="page-heading">{l s='Pending Requests' mod='tbgdpr'}</h2>

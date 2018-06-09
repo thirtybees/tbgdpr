@@ -24,9 +24,9 @@
 {/capture}
 
 <div>
-  {include file="./misc/errors.tpl"}
-  {include file="./misc/warnings.tpl"}
-  {include file="./misc/confirmations.tpl"}
+  {include file="../misc/errors.tpl"}
+  {include file="../misc/warnings.tpl"}
+  {include file="../misc/confirmations.tpl"}
   <h1 class="page-heading">{l s='Right to be forgotten' mod='tbgdpr'}</h1>
 
   <div>
@@ -60,7 +60,7 @@
               >
     {else}
       <input class="btn btn-danger"
-             name="gdpr-remove"
+             name="gdpr-customer-remove"
              type="submit"
              value="{l s='Delete my account' mod='tbgdpr'}"
               >

@@ -103,13 +103,13 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
                 $result = $request->execute();
 
                 if ($result) {
-                    $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes', 'object');
+                    $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes.', 'object');
                 } else {
-                    $this->errors[] = $this->module->l('An error has occurred. Please contact customer support', 'object');
+                    $this->errors[] = $this->module->l('An error has occurred. Please contact customer support.', 'object');
                 }
             }
         } else {
-            $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to be removed from all direct marketing purposes', 'object');
+            $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to be removed from all direct marketing purposes.', 'object');
         }
     }
 
@@ -142,7 +142,7 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
                 }
             }
         } else {
-            $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to be removed from all direct marketing purposes', 'object');
+            $this->errors[] = $this->module->l('Please tick the box in order to confirm that you want to be removed from all direct marketing purposes.', 'object');
         }
     }
 
@@ -184,7 +184,7 @@ class TbGdprObjectModuleFrontController extends ModuleFrontController
                 ]
             );
 
-            $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes', 'object');
+            $this->confirmations[] = $this->module->l('You have been removed from all direct marketing purposes.', 'object');
             $objectRequest->delete();
         }
 

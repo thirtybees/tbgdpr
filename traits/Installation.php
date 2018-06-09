@@ -34,6 +34,8 @@ use TbGdprModule\PhpParser\ParserFactory;
 use TbGdprModule\PhpParser\PrettyPrinter\Standard as StandardPrinter;
 use TbGdprModule\Tools as GdprTools;
 use TbGdprRequest;
+use TbObjectRequest;
+use TbRemoveRequest;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -74,6 +76,8 @@ trait Installation
         $this->installDefaultSettings();
 
         TbGdprRequest::createDatabase();
+        TbObjectRequest::createDatabase();
+        TbRemoveRequest::createDatabase();
 
         return parent::install() &&
             $this->registerHook('header') &&
