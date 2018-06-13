@@ -19,6 +19,7 @@
 
 namespace TbGdprModule;
 
+use Adapter_Exception;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use SmartyException;
@@ -89,13 +90,13 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Data security & management', 'Forms'),
+                    'title' => $this->l('Data Security and Management', 'Forms'),
                     'icon'  => 'icon-list',
                 ],
                 'input'  => [
                     [
                         'type'  => 'compliant_modules',
-                        'label' => $this->l('Compliant modules', 'Forms'),
+                        'label' => $this->l('Compliant Modules', 'Forms'),
                         'name'  => static::DISPLAY_LEARN_MORE_LINK,
                         'lang'  => true,
                         'modules' => GdprTools::findCompliantModules(),
@@ -171,27 +172,27 @@ trait Forms
                             [
                                 'id'    => 'banner',
                                 'value' => 1,
-                                'label' => $this->l('Banner bottom', 'Forms'),
+                                'label' => $this->l('Banner Nottom', 'Forms'),
                             ],
                             [
                                 'id'    => 'banner_top',
                                 'value' => 2,
-                                'label' => $this->l('Banner top', 'Forms'),
+                                'label' => $this->l('Banner Top', 'Forms'),
                             ],
                             [
                                 'id'    => 'banner_top_pushdown',
                                 'value' => 3,
-                                'label' => $this->l('Banner top (pushdown)', 'Forms'),
+                                'label' => $this->l('Banner Top (pushdown)', 'Forms'),
                             ],
                             [
                                 'id'    => 'floating_left',
                                 'value' => 4,
-                                'label' => $this->l('Floating left', 'Forms'),
+                                'label' => $this->l('Floating Left', 'Forms'),
                             ],
                             [
                                 'id'    => 'floating_right',
                                 'value' => 5,
-                                'label' => $this->l('Floating right', 'Forms'),
+                                'label' => $this->l('Floating Right', 'Forms'),
                             ],
                         ],
                     ],
@@ -224,27 +225,27 @@ trait Forms
                     ],
                     [
                         'type'  => 'color',
-                        'label' => $this->l('Banner color', 'Forms'),
+                        'label' => $this->l('Banner Color', 'Forms'),
                         'name'  => static::DISPLAY_PALETTE_BANNER,
                     ],
                     [
                         'type'  => 'color',
-                        'label' => $this->l('Banner text color', 'Forms'),
+                        'label' => $this->l('Banner Text Color', 'Forms'),
                         'name'  => static::DISPLAY_PALETTE_BANNER_TEXT,
                     ],
                     [
                         'type'  => 'color',
-                        'label' => $this->l('Button color', 'Forms'),
+                        'label' => $this->l('Button Color', 'Forms'),
                         'name'  => static::DISPLAY_PALETTE_BUTTON,
                     ],
                     [
                         'type'  => 'color',
-                        'label' => $this->l('Button text color', 'Forms'),
+                        'label' => $this->l('Button Text Color', 'Forms'),
                         'name'  => static::DISPLAY_PALETTE_BUTTON_TEXT,
                     ],
                     [
                         'type'  => 'text',
-                        'label' => $this->l('Learn more link', 'Forms'),
+                        'label' => $this->l('Learn More Link', 'Forms'),
                         'name'  => static::DISPLAY_LEARN_MORE_LINK,
                         'lang'  => true,
                     ],
@@ -331,14 +332,14 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Right to be anonymous', 'Forms'),
+                    'title' => $this->l('Right to Be Anonymous', 'Forms'),
                     'icon'  => 'icon-shield',
                 ],
                 'description' => $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/anonymous/desc.tpl'),
                 'input' => [
                     [
                         'type'    => 'switch',
-                        'label'   => $this->l('Enable this tool'),
+                        'label'   => $this->l('Enable This Tool'),
                         'name'    => static::ANONYMOUS_ENABLED,
                         'is_bool' => true,
                         'values'  => [
@@ -356,7 +357,7 @@ trait Forms
                     ],
                     [
                         'type'         => 'textarea',
-                        'label'        => $this->l('Right to be anonymous', 'Forms'),
+                        'label'        => $this->l('Right to Be anonymous', 'Forms'),
                         'hint'         => $this->l('Content displayed on the Right to be anonymous information page', 'Forms'),
                         'name'         => static::ANONYMOUS_TEXT,
                         'required'     => false,
@@ -423,14 +424,14 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Right to be informed', 'Forms'),
+                    'title' => $this->l('Right to Be Informed', 'Forms'),
                     'icon'  => 'icon-shield',
                 ],
                 'description' => $this->display($filename, 'views/templates/admin/tabs/informed/desc.tpl'),
                 'input'  => [
                     [
                         'type' => 'switch',
-                        'label' => $this->l('Enable this tool'),
+                        'label' => $this->l('Enable This Tool'),
                         'name' => static::INFORMED_ENABLED,
                         'is_bool' => true,
                         'values'  => [
@@ -448,7 +449,7 @@ trait Forms
                     ],
                     [
                         'type'         => 'textarea',
-                        'label'        => $this->l('Right to be informed', 'Forms'),
+                        'label'        => $this->l('Right to Be Informed', 'Forms'),
                         'hint'         => $this->l('Content displayed on the Right to be informed page', 'Forms'),
                         'name'         => static::INFORMED_TEXT,
                         'required'     => false,
@@ -512,14 +513,14 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Right to correct information', 'Forms'),
+                    'title' => $this->l('Right to Correct Information', 'Forms'),
                     'icon'  => 'icon-shield',
                 ],
                 'description' => $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/correct/desc.tpl'),
                 'input'  => [
                     [
                         'type' => 'switch',
-                        'label' => $this->l('Enable this tool'),
+                        'label' => $this->l('Enable This Tool'),
                         'name' => static::CORRECTED_ENABLED,
                         'is_bool' => true,
                         'values'  => [
@@ -537,7 +538,7 @@ trait Forms
                     ],
                     [
                         'type'         => 'textarea',
-                        'label'        => $this->l('Right to rectification', 'Forms'),
+                        'label'        => $this->l('Right to Rectification', 'Forms'),
                         'hint'         => $this->l('Content displayed on the Right to rectification page', 'Forms'),
                         'name'         => static::CORRECTED_TEXT,
                         'required'     => false,
@@ -604,14 +605,14 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Right to be notified', 'Forms'),
+                    'title' => $this->l('Right to Be Notified', 'Forms'),
                     'icon'  => 'icon-shield',
                 ],
                 'description' => $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/notification/desc.tpl'),
                 'input'  => [
                     [
                         'type' => 'switch',
-                        'label' => $this->l('Enable this tool'),
+                        'label' => $this->l('Enable This Tool'),
                         'name' => static::NOTIFICATION_ENABLED,
                         'is_bool' => true,
                         'values'  => [
@@ -629,7 +630,7 @@ trait Forms
                     ],
                     [
                         'type'         => 'textarea',
-                        'label'        => $this->l('Right to be notified', 'Forms'),
+                        'label'        => $this->l('Right to Be Notified', 'Forms'),
                         'hint'         => $this->l('Content displayed on the Right to be notified page', 'Forms'),
                         'name'         => static::NOTIFICATION_TEXT,
                         'required'     => false,
@@ -696,14 +697,14 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Right to object', 'Forms'),
+                    'title' => $this->l('Right to Object', 'Forms'),
                     'icon'  => 'icon-shield',
                 ],
                 'description' => $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/object/desc.tpl'),
                 'input'  => [
                     [
                         'type' => 'switch',
-                        'label' => $this->l('Enable this tool'),
+                        'label' => $this->l('Enable This Tool'),
                         'name' => static::OBJECT_ENABLED,
                         'is_bool' => true,
                         'values'  => [
@@ -721,7 +722,7 @@ trait Forms
                     ],
                     [
                         'type'         => 'textarea',
-                        'label'        => $this->l('Right to object', 'Forms'),
+                        'label'        => $this->l('Right to Object', 'Forms'),
                         'hint'         => $this->l('Content displayed on the Right to object page', 'Forms'),
                         'name'         => static::OBJECT_TEXT,
                         'required'     => false,
@@ -730,7 +731,7 @@ trait Forms
                     ],
                     [
                         'type'         => 'text',
-                        'label'        => $this->l('Minutes before email verification expires', 'Forms'),
+                        'label'        => $this->l('Minutes before Email Verification Expires', 'Forms'),
                         'name'         => static::OBJECT_EMAIL_EXPIRE,
                         'required'     => true,
                     ],
@@ -794,14 +795,14 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Right to restrict processing', 'Forms'),
+                    'title' => $this->l('Right to Restrict Processing', 'Forms'),
                     'icon'  => 'icon-shield',
                 ],
                 'description' => $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/restrict/desc.tpl'),
                 'input'  => [
                     [
                         'type' => 'switch',
-                        'label' => $this->l('Enable this tool'),
+                        'label' => $this->l('Enable This Tool'),
                         'name' => static::RESTRICT_ENABLED,
                         'is_bool' => true,
                         'values'  => [
@@ -819,7 +820,7 @@ trait Forms
                     ],
                     [
                         'type'         => 'textarea',
-                        'label'        => $this->l('Right to restrict processing', 'Forms'),
+                        'label'        => $this->l('Right to Restrict Processing', 'Forms'),
                         'hint'         => $this->l('Content displayed on the Right to restrict processing information page', 'Forms'),
                         'name'         => static::RESTRICT_TEXT,
                         'required'     => false,
@@ -884,7 +885,7 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Right to be forgotten', 'Forms'),
+                    'title' => $this->l('Right to Be Forgotten', 'Forms'),
                     'icon'  => 'icon-shield',
                 ],
                 'description' =>  $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/removedata/desc.tpl'),
@@ -909,7 +910,7 @@ trait Forms
                     ],
                     [
                         'type' => 'switch',
-                        'label' => $this->l('Confirm account removal'),
+                        'label' => $this->l('Confirm Account Removal'),
                         'name' => static::FORGOTTEN_NEEDS_CONFIRM,
                         'hint' => $this->l('Does the user need permission before the account is removed?'),
                         'is_bool' => true,
@@ -928,7 +929,7 @@ trait Forms
                     ],
                     [
                         'type'         => 'textarea',
-                        'label'        => $this->l('Right to be forgotten', 'Forms'),
+                        'label'        => $this->l('Right to Be Forgotten', 'Forms'),
                         'hint'         => $this->l('Content displayed on the Right to be forgotten information page', 'Forms'),
                         'name'         => static::FORGOTTEN_TEXT,
                         'required'     => false,
@@ -952,6 +953,7 @@ trait Forms
      * @throws PrestaShopException
      * @throws SmartyException
      * @throws ReflectionException
+     * @throws Adapter_Exception
      */
     public function displayPendingRemovalRequestsForm()
     {
@@ -987,7 +989,7 @@ trait Forms
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @throws \Adapter_Exception
+     * @throws Adapter_Exception
      *
      * @since 1.0.0
      */
@@ -996,7 +998,7 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Pending removal requests', 'Forms'),
+                    'title' => $this->l('Pending Removal Requests', 'Forms'),
                     'icon'  => 'icon-user',
                 ],
                 'input'  => [
@@ -1059,14 +1061,14 @@ trait Forms
         return [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Right to data portability', 'Forms'),
+                    'title' => $this->l('Right to Data Portability', 'Forms'),
                     'icon'  => 'icon-shield',
                 ],
                 'description' => $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/dataportability/desc.tpl'),
                 'input'  => [
                     [
                         'type' => 'switch',
-                        'label' => $this->l('Enable this tool'),
+                        'label' => $this->l('Enable This Tool'),
                         'name' => static::DATAPORTABILITY_ENABLED,
                         'is_bool' => true,
                         'values'  => [
@@ -1084,7 +1086,7 @@ trait Forms
                     ],
                     [
                         'type'         => 'textarea',
-                        'label'        => $this->l('Right to data portability', 'Forms'),
+                        'label'        => $this->l('Right to Data Portability', 'Forms'),
                         'hint'         => $this->l('Content displayed on the Right to data portablitity information page', 'Forms'),
                         'name'         => static::DATAPORTABILITY_TEXT,
                         'required'     => false,

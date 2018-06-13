@@ -33,6 +33,8 @@
         <span class="small">{$module->displayName|escape:'html':'UTF-8'}</span>
       </div>
     </div>
+  {foreachelse}
+    <div class="alert alert-info">{l s='No modules found' mod='tbgdpr'}</div>
   {/foreach}
 </div>
 <script type="text/javascript">

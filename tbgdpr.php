@@ -215,17 +215,16 @@ class TbGdpr extends Module
      */
     protected function loadTabs()
     {
-
         $contents = [
             'data_security' => [
                 [
-                    'name'  => $this->l('Data security & management'),
+                    'name'  => $this->l('Data Security and Management'),
                     'icon'  => dot($this->getDataSecurityForm())->get('form.legend.icon'),
                     'value' => $this->displayDataSecurityForm(),
                     'badge' => '',
                 ],
                 [
-                    'name'  => $this->l('Customer requests'),
+                    'name'  => $this->l('All Customer Requests'),
                     'icon'  => 'icon-user',
                     'value' => $this->displayConsentModalForm(),
                     'badge' => '',
@@ -301,7 +300,7 @@ class TbGdpr extends Module
                     'badge' => '',
                 ],
                 'cookie_policy' => [
-                    'name'  => $this->l('Privacy policy'),
+                    'name'  => $this->l('Privacy Policy'),
                     'icon'  => 'icon-list-ul',
                     'value' => $this->displayConsentModalForm(),
                     'badge' => '',
