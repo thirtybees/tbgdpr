@@ -67,14 +67,17 @@ to license@thirtybees.com so we can send you a copy immediately.
 module.exports = {
   entry: {
     export: [
-      './export/src/main.jsx',
+      './export/main.jsx',
+    ],
+    requests: [
+      './requests/main.jsx',
     ],
   },
   resolve: {
     extensions: ['.js', '.jsx', '.css'],
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../dist'),
     publicPath: '/assets/',
     filename: '[name]-__BUILD_HASH__.bundle.min.js',
     libraryTarget: 'var',
@@ -86,7 +89,11 @@ module.exports = {
       {
         test: /\.jsx?$/,
         include: [
-          path.join(__dirname, 'export/src'),
+          path.join(__dirname, 'actions'),
+          path.join(__dirname, 'export'),
+          path.join(__dirname, 'reducers'),
+          path.join(__dirname, 'requests'),
+          path.join(__dirname, 'store'),
           path.join(__dirname, 'misc'),
         ],
         exclude: path.join(__dirname, 'node_modules'),
@@ -126,17 +133,26 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
         include: [
           path.join(__dirname, 'export/css'),
+          path.join(__dirname, 'requests/css'),
+        ],
+        use: [
+          'style-loader',
+          'css-loader',
         ],
       },
       {
         test: /\.less$/,
         include: [
           path.join(__dirname, 'export/less'),
+          path.join(__dirname, 'requests/less'),
         ],
-        loader: 'style-loader!css-loader!less-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+        use: [
+          'style-loader',
+          'css-loader',
+          'less-loader',
+        ],
       },
     ],
   },

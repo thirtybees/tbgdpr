@@ -112,6 +112,21 @@ trait Forms
     /**
      * @return string
      *
+     * @throws ReflectionException
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
+    public function displayAllCustomerRequestsForm()
+    {
+        $this->context->smarty->assign([
+            'ajaxUrl' => $this->baseUrl,
+        ]);
+
+        return $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/requests/all_customer_requests_panel.tpl');    }
+
+    /**
+     * @return string
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @since 1.0.0
@@ -271,7 +286,7 @@ trait Forms
                     'title' => $this->l('Content Security Policy', 'Forms'),
                     'icon'  => 'icon-shield',
                 ],
-                'description' => $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/restrict/csp-desc.tpl'),
+                'description' => $this->display((new ReflectionClass($this))->getFileName(), 'views/templates/admin/tabs/restrict/csp_desc.tpl'),
                 'input'  => [
                     [
                         'type'   => 'content-security-policy',

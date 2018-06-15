@@ -37,3 +37,4 @@ composer.lock
 
 *tbgdpr*.zip
 /vendor/
+/views/js/dist/

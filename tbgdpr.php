@@ -34,6 +34,7 @@ class TbGdpr extends Module
     use \TbGdprModule\Installation;
     use \TbGdprModule\Forms;
     use \TbGdprModule\AdminAjax;
+    use \TbGdprModule\ReactTranslations;
 
     const CONSENT_FUNCTIONAL = 'functional';
     const CONSENT_ANALYTICS = 'analytics';
@@ -88,6 +89,8 @@ class TbGdpr extends Module
     const TAB_PRODUCTS = 4;
     const TAB_CARTS = 5;
     const TAB_ORDERS = 6;
+
+    const DEFAULT_PAGINATION_LIMIT = 50;
 
     /** @var array $defaultConsents */
     public static $defaultConsents = [
@@ -184,6 +187,29 @@ class TbGdpr extends Module
      */
     public function getContent()
     {
+        if (Tools::getValue('dev')) {
+            $faker = \Faker\Factory::create();
+            $data = [];
+            for ($i = 0; $i < 2000; $i++) {
+                $data[] = [
+                    'id_customer'       => $faker->randomNumber(),
+                    'id_guest'          => $faker->randomNumber(),
+                    'email'             => ['type' => 'sql', 'value' => '0x'.hash('sha512', $faker->email)],
+                    'status'            => $faker->numberBetween(1, 3),
+                    'executed'          => (string) (int) $faker->boolean,
+                    'comment'           => $faker->text,
+                    'id_shop'           => $this->context->shop->id,
+                    'request_type'      => TbGdprRequest::REQUEST_TYPE_REMOVE_DATA,
+                    'date_add'          => $faker->date('Y-m-d H:i:s'),
+                    'date_upd'          => $faker->date('Y-m-d H:i:s'),
+                ];
+            }
+            Db::getInstance()->insert(
+                TbGdprRequest::$definition['table'],
+                $data
+            );
+        }
+
         $this->installEmailTemplates();
         $this->postProcess();
         $this->context->smarty->assign([
@@ -193,12 +219,23 @@ class TbGdpr extends Module
                 : [$this->context->shop->id => $this->context->shop->id],
             'baseUrl'        => $this->baseUrl,
             'moduleName'     => $this->name,
+            'reactTranslations' => $this->getReactTranslations(),
         ]);
-        $this->context->controller->addCSS($this->_path.'views/css/back.css', 'screen');
-        $this->context->controller->addJS($this->_path.'views/js/sweetalert.min.js');
-        $this->context->controller->addJS($this->_path.'views/js/popover.js');
-        $this->context->controller->addJS($this->_path.'views/js/back.js');
-        $this->context->controller->addCSS($this->_path.'views/css/popover.css', 'screen');
+        foreach ([
+                     'sweetalert.min.js',
+                     'popover.js',
+                     'back.js',
+                     'dist/export-__BUILD_HASH__.bundle.min.js',
+                     'dist/requests-__BUILD_HASH__.bundle.min.js',
+                 ] as $script) {
+            $this->context->controller->addJS("{$this->_path}views/js/{$script}");
+        }
+        foreach ([
+                     'back.css',
+                     'popover.css',
+                 ] as $style) {
+            $this->context->controller->addCSS("{$this->_path}views/css/{$style}", 'screen');
+        }
         $this->loadTabs();
 
         return $this->display(__FILE__, 'views/templates/admin/main.tpl');
@@ -226,7 +263,7 @@ class TbGdpr extends Module
                 [
                     'name'  => $this->l('All Customer Requests'),
                     'icon'  => 'icon-user',
-                    'value' => $this->displayConsentModalForm(),
+                    'value' => $this->displayAllCustomerRequestsForm(),
                     'badge' => '',
                 ],
             ],

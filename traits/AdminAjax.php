@@ -19,6 +19,10 @@
 
 namespace TbGdprModule;
 
+use Db;
+use DbQuery;
+use Exception;
+use Logger;
 use PrestaShopException;
 use TbGdprRequest;
 
@@ -111,5 +115,72 @@ trait AdminAjax
             'success' => false,
             'message' => $this->l('An error occurred while updating the request', 'AdminAjax'),
         ]));
+    }
+
+    /**
+     * Retrieve customer requests
+     */
+    public function ajaxProcessRetrieveCustomerRequests()
+    {
+        $input = dot(@json_decode(file_get_contents('php://input'), true));
+        if ($input->has('type')) {
+            die(json_encode([
+                'success' => false,
+                'message' => $this->l('Type not found', 'AdminAjax'),
+            ]));
+        }
+        $page = $input->get('page', 0);
+        $pageSize = $input->get('pageSize', static::DEFAULT_PAGINATION_LIMIT);
+        $sorted = $input->get('sorted', []);
+        $filtered = $input->get('filtered', []);
+
+        $query = (new DbQuery())
+            ->from(bqSQL(TbGdprRequest::$definition['table']))
+        ;
+        foreach ($filtered as $filter) {
+            if (is_string($filter['value'])) {
+                $query->where('`'.bqSQL($filter['id']).'` = \''.pSQL($filter['value']).'\'');
+            } elseif (!empty($filter['value']['value'])) {
+                switch ($filter['value']['type']) {
+                    case 'emailhex':
+                        $query->where('LEFT(HEX(`'.bqSQL($filter['id']).'`), 12) LIKE \'%'.pSQL($filter['value']['value']).'%\'');
+                        break;
+                    case 'bool':
+                        if (in_array($filter['value']['value'], ['true', 'false'])) {
+                            $query->where('`'.bqSQL($filter['id']).'` = '.($filter['value']['value'] === 'true' ? '1' : '0'));
+                        }
+                        break;
+                    case 'string':
+                        $query->where('`'.bqSQL($filter['id']).'` LIKE \'%'.pSQL($filter['value']['value']).'%\'');
+                        break;
+                    default:
+                        $query->where('`'.bqSQL($filter['id']).'` = \''.pSQL($filter['value']['value']).'\'');
+                        break;
+                }
+            }
+        }
+
+        $countQuery = clone $query;
+        $countQuery->select('COUNT(*)');
+        $query->select('`id_tbgdpr_request`, LEFT(HEX(`email`), 12) AS `email`, `date_add`, `date_upd`, `status`, `executed`, `comment`');
+        $query->limit($pageSize, $page * $pageSize);
+        try {
+            $data = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+            $count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($countQuery);
+        } catch (Exception $e) {
+            Logger::addLog("TBGdpr Module error: {$e->getMessage()}");
+            $data = [];
+            $count = 0;
+        }
+        $pages = ceil($count / $pageSize);
+
+        @ob_clean();
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode([
+            'success' => true,
+            'data'    => $data,
+            'pages'   => (int) $pages,
+        ]);
+        exit;
     }
 }

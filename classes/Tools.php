@@ -157,18 +157,4 @@ class Tools
         $dir->close();
         return true;
     }
-
-    /**
-     * Sanitize hex string
-     *
-     * @param string $hex
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public static function sanitizeHex($hex)
-    {
-        return preg_replace('/[^A-Fa-f0-9]+/', '', $hex);
-    }
 }
