@@ -164,6 +164,13 @@ trait AdminAjax
         $countQuery->select('COUNT(*)');
         $query->select('`id_tbgdpr_request`, LEFT(HEX(`email`), 12) AS `email`, `date_add`, `date_upd`, `status`, `executed`, `comment`');
         $query->limit($pageSize, $page * $pageSize);
+        if (!empty($sorted)) {
+            $orderBy = [];
+            foreach ($sorted as $sort) {
+                $orderBy[] = '`'.bqSQL($sort['id']).'` '.($sort['desc'] ? 'DESC' : 'ASC');
+            }
+            $query->orderBy(implode(',', $orderBy));
+        }
         try {
             $data = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
             $count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($countQuery);
