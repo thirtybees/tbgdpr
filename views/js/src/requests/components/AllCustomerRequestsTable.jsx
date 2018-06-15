@@ -126,7 +126,7 @@ export default class AllCustomerRequestsTable extends Component {
   render() {
     const { displayedCustomerRequests, translations } = this.props;
     const state = _.cloneDeep(this.state);
-    const { loading, pages, page } = state;
+    const { loading, pages } = state;
 
     if (!Array.isArray(displayedCustomerRequests)) {
       return null;
