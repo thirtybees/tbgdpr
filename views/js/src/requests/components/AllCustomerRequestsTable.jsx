@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import xss from 'xss';
 
+import Bool from '../containers/cells/BoolContainer';
 import { setAllCustomerRequests } from '../../actions';
 
 import store from '../../store';
 import { loadTableState, saveTableState } from "../../misc/tools";
-import { DEFAULT_PAGE_SIZE, DEFAULT_ROW_SELECT, TABLE_BOOL, TABLE_EMAIL_HEX } from "../../misc/consts";
+import { DEFAULT_ROW_SELECT, TABLE_BOOL, TABLE_EMAIL_HEX } from "../../misc/consts";
 
 const prefix = 'allCustomers';
 const ReactTable = ReactTableBla.default;
@@ -147,7 +148,7 @@ export default class AllCustomerRequestsTable extends Component {
               value: event.target.value,
               type: TABLE_EMAIL_HEX,
             })}
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             value={_.get(filter, 'value.value', '') + ''}
           />,
         Cell: props => <kbd>{xss(props.value)}</kbd>
@@ -170,12 +171,7 @@ export default class AllCustomerRequestsTable extends Component {
             <option value="true">{xss(translations.yes)}</option>
             <option value="false">{xss(translations.no)}</option>
           </select>,
-        Cell: props => (
-          <Choose>
-            <When condition={parseInt(props.value, 10)}><i className='icon icon-check' style={{color: '#72C279'}} /></When>
-            <Otherwise><i className='icon icon-times' style={{color: '#E08F95'}} /></Otherwise>
-          </Choose>
-        )
+        Cell: props => <Bool enabled={!!parseInt(props.value, 10)} style={{cursor: 'pointer'}} />
       },
       {
         Header: xss(translations.dateAdded),
