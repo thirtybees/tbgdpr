@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
-import ReactTableBla from 'react-table';
+const ReactTable  = require('react-table').default;
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import _ from 'lodash';
 import xss from 'xss';
 
-import Bool from '../containers/cells/BoolContainer';
+import Bool from '../containers/table/cells/BoolContainer';
+import ResetButton from '../containers/table/ResetButtonContainer';
+import TableTHead from './table/TableTHead';
+import SortableHeader from './table/SortableHeader';
+import Loading from './misc/Loading';
+import Pagination from './table/Pagination';
 import { setAllCustomerRequests } from '../../actions';
 
-import store from '../../store';
-import { loadTableState, saveTableState } from "../../misc/tools";
-import { DEFAULT_ROW_SELECT, TABLE_BOOL, TABLE_EMAIL_HEX } from "../../misc/consts";
+import { getSort, loadTableState, saveTableState } from '../../misc/tools';
+import { DEFAULT_ROW_SELECT, TABLE_BOOL, TABLE_EMAIL_HEX } from '../../misc/consts';
+import getStore from '../../store';
 
+const store = getStore();
 const prefix = 'allCustomers';
-const ReactTable = ReactTableBla.default;
 let pendingRequests = [];
 const prevState = loadTableState(prefix);
 
@@ -33,9 +39,9 @@ const requestData = (pageSize, page, sorted, filtered) => {
     }, {
       cancelToken: source.token,
     })
-      .then(({ data }) => {
-        store.dispatch(setAllCustomerRequests(data.data));
-        let filteredData = data.data;
+      .then(({ data: response, data: { data, pages, rowCount } }) => {
+        store.dispatch(setAllCustomerRequests(data));
+        let filteredData = data;
         if (filtered.length) {
           filteredData = filtered.reduce((filteredSoFar, nextFilter) => {
             return filteredSoFar.filter(row => {
@@ -61,8 +67,9 @@ const requestData = (pageSize, page, sorted, filtered) => {
 
         const res = {
           rows: sortedData.slice(pageSize * page, pageSize * page + pageSize),
-          pages: data.pages,
+          pages: pages,
           page,
+          rowCount,
         };
         resolve(res);
       })
@@ -76,24 +83,23 @@ const requestData = (pageSize, page, sorted, filtered) => {
 export default class AllCustomerRequestsTable extends Component {
   state = {
     pages: 0,
+    rowCount: 0,
     page: 0,
     loading: false,
+    sorted: prevState.sorted,
+    filtered: prevState.filtered,
   };
 
   static propTypes = {
     displayedCustomerRequests: PropTypes.array,
+    translations: PropTypes.object,
   };
 
-  componentDidMount() {
-    const prevState = loadTableState(prefix);
-    this.fetchData(prevState);
+  shouldComponentUpdate(nextProps) {
+    return !_.isEmpty(nextProps.translations);
   }
 
   fetchData = (state) => {
-    if (typeof state === 'undefined') {
-      state = _.cloneDeep(this.state);
-    }
-
     const { pageSize, page, sorted, filtered } = state;
 
     saveTableState(prefix, {
@@ -102,7 +108,9 @@ export default class AllCustomerRequestsTable extends Component {
       sorted,
     });
 
-    this.setState({ loading: true });
+    this.setState({
+     loading: true,
+    });
     requestData(
       pageSize,
       page,
@@ -113,6 +121,7 @@ export default class AllCustomerRequestsTable extends Component {
         this.setState({
           pages: res.pages,
           page: res.page,
+          rowCount: res.rowCount,
           loading: false
         });
       })
@@ -124,10 +133,43 @@ export default class AllCustomerRequestsTable extends Component {
     ;
   };
 
+  injectThead = ({ toggleSort, className, children, ...rest }) => {
+    if (typeof toggleSort !== 'function') {
+      return (
+        <div
+          className={classnames('rt-th', 'rt-th-filter', className)}
+          onClick={e => toggleSort && toggleSort(e)}
+          role="columnheader"
+          tabIndex="-1"
+          {...rest}
+        >
+          {children}
+        </div>
+      );
+    }
+
+    return <TableTHead children={children}/>;
+  };
+
+  setSort = (id, desc, add = false) => {
+    const sorted = add ? _.cloneDeep(this.state.sorted) : [];
+    let sort = _.find(sorted, item => item.id === id);
+    if (typeof sort === 'undefined') {
+      sort = {
+        id,
+      };
+      sorted.push(sort);
+    }
+    sort.desc = desc;
+
+    this.setState({
+      sorted,
+    });
+  };
+
   render() {
     const { displayedCustomerRequests, translations } = this.props;
-    const state = _.cloneDeep(this.state);
-    const { loading, pages } = state;
+    const { pages, loading, sorted, filtered, rowCount } = this.state;
 
     if (!Array.isArray(displayedCustomerRequests)) {
       return null;
@@ -135,12 +177,24 @@ export default class AllCustomerRequestsTable extends Component {
 
     const columns = [
       {
-        Header: 'ID',
+        Header: <SortableHeader
+          name={translations.ID}
+          id="id_tbgdpr_request"
+          sort={getSort(sorted, 'id_tbgdpr_request')}
+          setSort={this.setSort}
+        />,
         accessor: 'id_tbgdpr_request',
+        style: {
+          cursor: 'pointer',
+        }
       }, {
-        Header: 'Visitor',
+        Header: <SortableHeader
+          name={translations.visitor}
+          id="email"
+          sort={getSort(sorted, 'email')}
+          setSort={this.setSort}
+        />,
         accessor: 'email',
-        filterMethod: () => true,
         Filter: ({ filter, onChange }) =>
           <input
             type="text"
@@ -151,52 +205,88 @@ export default class AllCustomerRequestsTable extends Component {
             style={{ width: '100%' }}
             value={_.get(filter, 'value.value', '') + ''}
           />,
-        Cell: props => <kbd>{xss(props.value)}</kbd>
+        Cell: props => <kbd>{xss(props.value)}</kbd>,
+        style: {
+          cursor: 'pointer',
+        }
       },
       {
-        Header: 'Executed',
+        Header: <SortableHeader
+          name={translations.executed}
+          id="executed"
+          sort={getSort(sorted, 'executed')}
+          setSort={this.setSort}
+        />,
         accessor: 'executed',
         filterable: true,
-        filterMethod: () => true,
         Filter: ({ filter, onChange }) =>
           <select
             onChange={event => onChange({
               value: event.target.value,
               type: TABLE_BOOL,
             })}
-            style={{ width: "100%" }}
-            value={filter ? filter.value.value : "all"}
+            style={{ width: '100%' }}
+            value={filter ? filter.value.value : 'all'}
           >
             <option value="all">--</option>
             <option value="true">{xss(translations.yes)}</option>
             <option value="false">{xss(translations.no)}</option>
           </select>,
-        Cell: props => <Bool enabled={!!parseInt(props.value, 10)} style={{cursor: 'pointer'}} />
+        Cell: props => <Bool enabled={!!parseInt(props.value, 10)} style={{ cursor: 'pointer' }}/>,
+        style: {
+          cursor: 'pointer',
+        }
       },
       {
-        Header: xss(translations.dateAdded),
+        Header: <SortableHeader
+          name={translations.dateAdded}
+          id="date_add"
+          sort={getSort(sorted, 'date_add')}
+          setSort={this.setSort}
+        />,
         accessor: 'date_add',
         filterable: false,
+        style: {
+          cursor: 'pointer',
+        }
+      },
+      {
+        Header: null,
+        Filter: <ResetButton resetSort={() => this.setState({filtered: [], sorted: []})}/>,
+        filterable: !_.isEmpty(sorted) || !_.isEmpty(filtered),
+        sortable: false,
       }
     ];
 
     return (
       <ReactTable
+        className="-striped -highlight"
+
         data={displayedCustomerRequests}
         columns={columns}
         loading={loading}
-        onFetchData={this.fetchData}
-        defaultSorted={prevState.sorted}
-        defaultFiltered={prevState.filtered}
+        sorted={sorted}
+        filtered={filtered}
+
         defaultPageSize={prevState.pageSize}
         pageSizeOptions={DEFAULT_ROW_SELECT}
-        filterable={true}
+        filterable
+        resizable={false}
         pages={pages}
         manual
+        showPaginationBottom
+        rowCount={rowCount}
+
+        onFetchData={this.fetchData}
+        onSortedChange={sorted => this.setState({ sorted })}
+        onFilteredChange={filtered => this.setState({ filtered })}
+
+        ThComponent={this.injectThead}
+        PaginationComponent={Pagination}
 
         previousText={translations.previous}
         nextText={translations.next}
-        loadingText={translations.loading}
+        loadingText={<Loading/>}
         noDataText={translations.noRowsFound}
         pageText={translations.page}
         ofText={translations.of}

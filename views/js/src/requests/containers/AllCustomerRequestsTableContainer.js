@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import AllCustomerRequestsTable from '../components/AllCustomerRequestsTable';
 
 const mapStateToProps = (state) => {
-  return state;
+  return {
+    translations: state.translations,
+    displayedCustomerRequests: state.displayedCustomerRequests,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {

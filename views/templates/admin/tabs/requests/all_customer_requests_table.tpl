@@ -27,8 +27,7 @@
     window.TbGdprModule.debug = true;
 
     new window.TbGdprModule.requests.default(
-      document.getElementById('all-customer-requests-table'),
-      {$reactTranslations|json_encode}
+      document.getElementById('all-customer-requests-table')
     );
   }());
 </script>

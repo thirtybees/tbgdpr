@@ -101,4 +101,11 @@
     }
     init();
   }());
+  (function initTranslations() {
+    if (typeof window.TbGdprModule === 'undefined' || typeof window.TbGdprModule.translations === 'undefined') {
+      return setTimeout(initTranslations, 100);
+    }
+
+    new window.TbGdprModule.translations.default.set({$reactTranslations|json_encode})
+  }());
 </script>

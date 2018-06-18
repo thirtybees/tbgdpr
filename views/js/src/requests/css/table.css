@@ -7,7 +7,6 @@
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .ReactTable * {
@@ -30,8 +29,10 @@
     -ms-flex-align: stretch;
     align-items: stretch;
     width: 100%;
-    border-collapse: collapse;
-    overflow: auto
+    border-collapse: separate;
+    border-spacing: 0 2px;
+    margin-bottom: 5px;
+    overflow: auto;
 }
 
 .ReactTable .rt-thead {
@@ -71,32 +72,58 @@
 }
 
 .ReactTable .rt-thead.-filters .rt-th {
-    border-right: 1px solid rgba(0, 0, 0, 0.02)
-}
-
-.ReactTable .rt-thead.-header {
-    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.15)
+    padding: 8px;
 }
 
 .ReactTable .rt-thead .rt-tr {
-    text-align: center
+    text-align: center;
+}
+
+.ReactTable .rt-thead .rt-tr .rt-th.rt-th-sort {
+    border: none;
+    font-weight: normal;
+    vertical-align: top;
+    border-bottom: solid 1px #a0d0eb;
+    text-align: left;
+    padding: 8px;
+}
+
+.ReactTable .rt-thead .rt-tr .rt-th.rt-th-filter {
+    background-color: #ecf6fb;
+    border-bottom: solid 1px #a0d0eb;
+}
+
+.ReactTable .rt-thead a.active i {
+    color: #000;
+}
+
+.ReactTable .rt-thead .rt-tr .rt-th.rt-th-filter input, .ReactTable .rt-thead .rt-tr .rt-th.rt-th-filter select {
+    display: block;
+    width: 100%;
+    height: 31px;
+    line-height: 1.42857;
+    color: #555;
+    background-color: #F5F8F9;
+    background-image: none;
+    border-radius: 3px;
+    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    font-size: 11px;
+    padding: 4px;
+    border-color: #a0d0eb;
+}
+
+.ReactTable .rt-thead .rt-tr .rt-th.rt-th-filter input:focus {
+    background-color: #FEFBE2;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 
 .ReactTable .rt-thead .rt-th, .ReactTable .rt-thead .rt-td {
     padding: 5px 5px;
     line-height: normal;
     position: relative;
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
-    transition: box-shadow .3s cubic-bezier(.175, .885, .32, 1.275);
-    box-shadow: inset 0 0 0 0 transparent;
-}
-
-.ReactTable .rt-thead .rt-th.-sort-asc, .ReactTable .rt-thead .rt-td.-sort-asc {
-    box-shadow: inset 0 3px 0 0 rgba(0, 0, 0, 0.6)
-}
-
-.ReactTable .rt-thead .rt-th.-sort-desc, .ReactTable .rt-thead .rt-td.-sort-desc {
-    box-shadow: inset 0 -3px 0 0 rgba(0, 0, 0, 0.6)
 }
 
 .ReactTable .rt-thead .rt-th.-cursor-pointer, .ReactTable .rt-thead .rt-td.-cursor-pointer {
@@ -171,12 +198,8 @@
     border-bottom: 0
 }
 
-.ReactTable .rt-tbody .rt-td {
-    border-right: 1px solid rgba(0, 0, 0, 0.02);
-}
-
 .ReactTable .rt-tbody .rt-td:last-child {
-    border-right: 0
+    border-right: 0;
 }
 
 .ReactTable .rt-tbody .rt-expandable {
@@ -206,7 +229,8 @@
     flex: 1 0 auto;
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
-    display: inline-flex
+    display: inline-flex;
+    margin-top: 2px;
 }
 
 .ReactTable .rt-th, .ReactTable .rt-td {
@@ -232,7 +256,6 @@
 .ReactTable .rt-expander {
     display: inline-block;
     position: relative;
-    margin: 0;
     color: transparent;
     margin: 0 10px;
 }
@@ -280,7 +303,6 @@
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
 }
 
 .ReactTable .rt-tfoot .rt-td {
@@ -288,15 +310,15 @@
 }
 
 .ReactTable .rt-tfoot .rt-td:last-child {
-    border-right: 0
+    border-right: 0;
 }
 
 .ReactTable.-striped .rt-tr.-odd {
-    background: rgba(0, 0, 0, 0.03)
+    background: #FCFDFE;
 }
 
 .ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
-    background: rgba(0, 0, 0, 0.05)
+    background: #F4F8FB;
 }
 
 .ReactTable .-pagination {
@@ -313,7 +335,6 @@
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     padding: 3px;
-    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
     border-top: 2px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -324,7 +345,7 @@
     font-size: inherit;
     border-radius: 3px;
     font-weight: normal;
-    outline: none
+    outline: none;
 }
 
 .ReactTable .-pagination .-btn {

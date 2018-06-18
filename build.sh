@@ -31,20 +31,19 @@ export DIR
 cp ${CWD_BASEDIR}/ ${DIR} -rf
 
 # Webpack build
-cd ${DIR}/${CWD_BASENAME}/views/js/app/
+cd ${DIR}/${CWD_BASENAME}/views/js/src/
 
 if [ -x "$(command -v yarn)" ]; then
   yarn install
 else
   npm install
 fi
-rm -rf ${DIR}/${CWD_BASENAME}/views/js/app/dist/
+rm -rf ${DIR}/${CWD_BASENAME}/views/js/dist/
 NODE_ENV=production webpack --mode production
-cp ${DIR}/${CWD_BASENAME}/views/js/app/index.php ${DIR}/${CWD_BASENAME}/views/js/app/dist/index.php
-cp ${DIR}/${CWD_BASENAME}/views/js/app/dist/checkout-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/app/dist/checkout-${BUILD_HASH}.bundle.min.js
-cp ${DIR}/${CWD_BASENAME}/views/js/app/dist/ordergrid-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/app/dist/ordergrid-${BUILD_HASH}.bundle.min.js
-cp ${DIR}/${CWD_BASENAME}/views/js/app/dist/orderpage-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/app/dist/orderpage-${BUILD_HASH}.bundle.min.js
-cp ${DIR}/${CWD_BASENAME}/views/js/app/dist/paperselector-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/app/dist/paperselector-${BUILD_HASH}.bundle.min.js
+cp ${DIR}/${CWD_BASENAME}/views/js/index.php ${DIR}/${CWD_BASENAME}/views/js/dist/index.php
+cp ${DIR}/${CWD_BASENAME}/views/js/dist/export-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/dist/export-${BUILD_HASH}.bundle.min.js
+cp ${DIR}/${CWD_BASENAME}/views/js/dist/requests-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/dist/requests-${BUILD_HASH}.bundle.min.js
+cp ${DIR}/${CWD_BASENAME}/views/js/dist/translations-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/dist/translations-${BUILD_HASH}.bundle.min.js
 
 cd ${DIR}/${CWD_BASENAME}
 
@@ -73,8 +72,11 @@ FILES+=("views/js/popover.js")
 FILES+=("views/js/sweetalert.min.js")
 FILES+=("views/index.php")
 FILES+=("views/js/index.php")
-FILES+=("views/js/app/index.php")
-FILES+=("views/js/app/dist/index.php")
+FILES+=("views/js/index.php")
+FILES+=("views/js/dist/index.php")
+FILES+=("views/js/dist/export-${BUILD_HASH}.bundle.min.js")
+FILES+=("views/js/dist/requests-${BUILD_HASH}.bundle.min.js")
+FILES+=("views/js/dist/translations-${BUILD_HASH}.bundle.min.js")
 FILES+=("views/templates/**")
 
 MODULE_VERSION="$(sed -ne "s/\\\$this->version *= *['\"]\([^'\"]*\)['\"] *;.*/\1/p" ${CWD_BASENAME}.php)"

@@ -15,7 +15,7 @@
  * @copyright 2018 thirty bees
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *}
-<div class="panel">
+<div class="panel" style="margin-bottom: 80px">
   <h3 class="panel-heading">{l s='All Customer Requests' mod='tbgdpr'}</h3>
   {include file="./all_customer_requests_table.tpl"}
 </div>

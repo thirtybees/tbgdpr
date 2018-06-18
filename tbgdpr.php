@@ -187,7 +187,7 @@ class TbGdpr extends Module
      */
     public function getContent()
     {
-        if (Tools::getValue('dev')) {
+        if (Tools::getValue('dev') && class_exists('\\Faker\\Factory')) {
             $faker = \Faker\Factory::create();
             $data = [];
             for ($i = 0; $i < 2000; $i++) {
@@ -227,6 +227,7 @@ class TbGdpr extends Module
                      'back.js',
                      'dist/export-__BUILD_HASH__.bundle.min.js',
                      'dist/requests-__BUILD_HASH__.bundle.min.js',
+                     'dist/translations-__BUILD_HASH__.bundle.min.js',
                  ] as $script) {
             $this->context->controller->addJS("{$this->_path}views/js/{$script}");
         }

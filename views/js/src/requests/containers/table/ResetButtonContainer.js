@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Bool from '../../components/cells/Bool';
+import ResetButton from '../../components/table/ResetButton';
 
 const mapStateToProps = (state) => {
   return {
@@ -12,9 +12,9 @@ const mapDispatchToProps = () => {
   };
 };
 
-const BoolContainer = connect(
+const ResetButtonContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Bool);
+)(ResetButton);
 
-export default BoolContainer;
+export default ResetButtonContainer;

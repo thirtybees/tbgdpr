@@ -44,7 +44,11 @@ trait ReactTranslations
             'of'          => $this->l('of', 'ReactTranslations'),
             'yes'         => $this->l('Yes', 'ReactTranslations'),
             'no'          => $this->l('No', 'ReactTranslations'),
+            'visitor'     => $this->l('Visitor', 'ReactTranslations'),
+            'executed'    => $this->l('Executed', 'ReactTranslations'),
             'dateAdded'   => $this->l('Date Added', 'ReactTranslations'),
+            'ID'          => $this->l('ID', 'ReactTranslations'),
+            'reset'       => $this->l('Reset', 'ReactTranslations'),
         ];
     }
 }

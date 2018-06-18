@@ -66,15 +66,18 @@ to license@thirtybees.com so we can send you a copy immediately.
 
 module.exports = {
   entry: {
-    export: [
-      './export/main.jsx',
-    ],
+    // export: [
+    //   './export/main.jsx',
+    // ],
     requests: [
       './requests/main.jsx',
     ],
+    translations: [
+      './translations/main.js',
+    ],
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.css'],
+    extensions: ['.js', '.jsx', '.css', '.less'],
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
@@ -93,6 +96,8 @@ module.exports = {
           path.join(__dirname, 'export'),
           path.join(__dirname, 'reducers'),
           path.join(__dirname, 'requests'),
+          path.join(__dirname, 'requestsbadge'),
+          path.join(__dirname, 'translations'),
           path.join(__dirname, 'store'),
           path.join(__dirname, 'misc'),
         ],

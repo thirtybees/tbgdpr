@@ -2,20 +2,18 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import requests from '../reducers/requests';
 
-let store;
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION__;
+const getStore = () => {
+  window.TbGdprModule = window.TbGdprModule || {};
+  if (!window.TbGdprModule.store) {
+    window.TbGdprModule.store = createStore(
+      requests,
+      devTools && devTools(),
+      applyMiddleware(thunk)
+    );
+  }
 
-// if (window.TbGdprModule.debug) {
-  store = createStore(
-    requests,
-    devTools && devTools(),
-    applyMiddleware(thunk)
-  );
-// } else {
-//   store = createStore(
-//     requests,
-//     applyMiddleware(thunk)
-//   );
-// }
+  return window.TbGdprModule.store;
+};
 
-export default store;
+export default getStore;

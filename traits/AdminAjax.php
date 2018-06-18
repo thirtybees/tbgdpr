@@ -184,9 +184,10 @@ trait AdminAjax
         @ob_clean();
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode([
-            'success' => true,
-            'data'    => $data,
-            'pages'   => (int) $pages,
+            'success'  => true,
+            'data'     => $data,
+            'pages'    => (int) $pages,
+            'rowCount' => (int) $count,
         ]);
         exit;
     }
