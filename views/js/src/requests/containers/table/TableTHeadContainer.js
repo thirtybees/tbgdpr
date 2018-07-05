@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import AllCustomerRequestsTable from '../components/AllCustomerRequestsTable';
+import TableTHead from '../../components/table/TableTHead';
 
 const mapStateToProps = (state) => {
   return {
@@ -13,9 +13,9 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const AllCustomerRequestsTableContainer = connect(
+const TableTHeadContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(AllCustomerRequestsTable);
+)(TableTHead);
 
-export default AllCustomerRequestsTableContainer;
+export default TableTHeadContainer;

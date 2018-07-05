@@ -225,9 +225,12 @@ class TbGdpr extends Module
                      'sweetalert.min.js',
                      'popover.js',
                      'back.js',
-                     'dist/export-__BUILD_HASH__.bundle.min.js',
-                     'dist/requests-__BUILD_HASH__.bundle.min.js',
-                     'dist/translations-__BUILD_HASH__.bundle.min.js',
+                     'dist/export-bundle.min.js',
+                     'dist/requests-bundle.min.js',
+                     'dist/translations-bundle.min.js',
+                     'dist/vendors~datarequests~requests-bundle.min.js',
+                     'dist/vendors~datarequests~requests~translations-bundle.min.js',
+                     'dist/vendors~requests-bundle.min.js',
                  ] as $script) {
             $this->context->controller->addJS("{$this->_path}views/js/{$script}");
         }

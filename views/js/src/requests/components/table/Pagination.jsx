@@ -1,18 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 const defaultButton = props => <button {...props}>{props.children}</button>;
 
-export default class Pagination extends React.Component {
-  constructor(props) {
-    super();
-
-    this.changePage = this.changePage.bind(this);
-
-    this.state = {
-      visiblePages: this.getVisiblePages(null, props.pages)
-    };
-  }
+class Pagination extends React.Component {
+  state = {
+    visiblePages: [],
+  };
 
   static propTypes = {
     pages: PropTypes.number,
@@ -20,58 +15,53 @@ export default class Pagination extends React.Component {
     PageButtonComponent: PropTypes.any,
     onPageChange: PropTypes.func,
     previousText: PropTypes.string,
-    nextText: PropTypes.string
+    nextText: PropTypes.string,
+    translations: PropTypes.object,
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.pages !== nextProps.pages) {
-      this.setState({
-        visiblePages: this.getVisiblePages(null, nextProps.pages)
-      });
-    }
+  static defaultProps = {
+    page: 0,
+    pages: 1,
+  };
 
-    this.changePage(nextProps.page + 1);
+  static getDerivedStateFromProps(nextProps) {
+    return {
+      visiblePages: Pagination.getVisiblePages(nextProps.page + 1, nextProps.pages),
+    };
   }
 
-  filterPages = (visiblePages, totalPages) => {
+  static filterPages = (visiblePages, totalPages) => {
     return visiblePages.filter(page => page <= totalPages);
   };
 
-  getVisiblePages = (page, total) => {
+  static getVisiblePages = (page, total) => {
     if (total < 6) {
-      return this.filterPages([1, 2, 3, 4, 5], total);
+      return Pagination.filterPages(_.range(4), total);
     } else {
-      if (page % 5 >= 0 && page > 3 && page + 2 < total) {
-        return [page - 2, page - 1, page, page + 1, page + 2];
-      } else if (page % 5 >= 0 && page > 3 && page + 2 >= total) {
-        return [total - 4, total - 3, total - 2, total - 1, total];
+      if (page % 5 >= 0 && page > 2 && page + 1 < total) {
+        return [page - 3, page - 2, page - 1, page, page + 1];
+      } else if (page % 5 >= 0 && page > 2 && page + 1 >= total) {
+        return [total - 5, total - 4, total - 3, total - 2, total - 1];
       } else {
-        return [1, 2, 3, 4, 5];
+        return _.range(4);
       }
     }
   };
 
-  changePage(page) {
-    const activePage = this.props.page + 1;
-
-    if (page === activePage) {
-      return;
-    }
-
-    const visiblePages = this.getVisiblePages(page, this.props.pages);
-
-    this.setState({
-      visiblePages: this.filterPages(visiblePages, this.props.pages)
-    });
-
-    this.props.onPageChange(page - 1);
-  }
-
   render() {
-    const { PageButtonComponent = defaultButton, onPageSizeChange, pageSize, rowCount } = this.props;
+    const {
+      PageButtonComponent = defaultButton,
+      pageSize,
+      rowCount,
+      translations,
+      page: activePage,
+      pages,
+      onPageChange,
+      onPageSizeChange,
+    } = this.props;
     const { visiblePages } = this.state;
-    const activePage = this.props.page + 1;
-    const total = this.props.pages;
+    const total = pages;
+    console.log(visiblePages);
     
     return (
       <div className="row">
@@ -79,7 +69,7 @@ export default class Pagination extends React.Component {
         </div>
         <div className="col-lg-6">
           <div className="pagination">
-            Display
+            {translations.display}
             <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">
               {parseInt(pageSize, 10)}&nbsp;
               <i className="icon-caret-down"/>
@@ -101,57 +91,57 @@ export default class Pagination extends React.Component {
                 <a className="pagination-items-page" onClick={() => onPageSizeChange(1000)}>1000</a>
               </li>
             </ul>
-            &nbsp;/ {parseInt(rowCount, 10)} result(s)
+            &nbsp;/ {parseInt(rowCount, 10)} {translations.paginationResults}
           </div>
           <ul className="pagination pull-right" style={{ cursor: 'pointer' }}>
-            <li className={activePage < 2 ? 'disabled' : ''}>
+            <li className={activePage < 1 ? 'disabled' : ''}>
               <a
                 className="pagination-link"
-                onClick={this.changePage.bind(null, 1)}
+                onClick={() => onPageChange(0)}
               >
                 <i className="icon-double-angle-left"/>
               </a>
             </li>
-            <li className={activePage < 2 ? 'disabled' : ''}>
+            <li className={activePage < 1 ? 'disabled' : ''}>
               <a
                 className="pagination-link"
-                onClick={this.changePage.bind(null, activePage - 1)}
+                onClick={() => onPageChange(this.props.page - 1)}
               >
                 <i className="icon-angle-left"/>
               </a>
             </li>
-            <If condition={activePage > 3 && total > 5}>
+            <If condition={activePage > 2 && total > 4}>
               <li className="disabled">
                 <a >…</a>
               </li>
             </If>
             <For each="page" of={visiblePages}>
-              <li key={page} className={activePage == page ? 'active' : ''}>
+              <li key={page} className={this.props.page == page ? 'active' : ''}>
                 <a
                   className="pagination-link"
-                  onClick={this.changePage.bind(null, page)}
+                  onClick={() => onPageChange(page)}
                 >
-                  {parseInt(page, 10)}
+                  {parseInt(page, 10) + 1}
                 </a>
               </li>
             </For>
-            <If condition={activePage < total - 2 && total > 5}>
+            <If condition={activePage < total - 3 && total > 4}>
               <li className="disabled">
-                <a >…</a>
+                <a>…</a>
               </li>
             </If>
-            <li className={(activePage >= total) ? 'disabled' : ''}>
+            <li className={(activePage >= total - 1) ? 'disabled' : ''}>
               <a
                 className="pagination-link"
-                onClick={this.changePage.bind(null, activePage + 1)}
+                onClick={() => onPageChange(this.props.page + 1)}
               >
                 <i className="icon-angle-right"/>
               </a>
             </li>
-            <li className={(activePage >= total) ? 'disabled' : ''}>
+            <li className={(activePage >= total - 1) ? 'disabled' : ''}>
               <a
                 className="pagination-link"
-                onClick={this.changePage.bind(null, total)}
+                onClick={() => onPageChange(total)}
               >
                 <i className="icon-double-angle-right"/>
               </a>
@@ -160,51 +150,7 @@ export default class Pagination extends React.Component {
         </div>
       </div>
     );
-
-    /**
-     * <div className="Table__pagination">
-     <div className="Table__prevPageWrapper">
-     <PageButtonComponent
-     className="Table__pageButton"
-     onClick={() => {
-              if (activePage === 1) return;
-              this.changePage(activePage - 1);
-            }}
-     disabled={activePage === 1}
-     >
-     {this.props.previousText}
-     </PageButtonComponent>
-     </div>
-     <div className="Table__visiblePagesWrapper">
-     {visiblePages.map((page, index, array) => {
-       return (
-         <PageButtonComponent
-           key={page}
-           className={
-             activePage === page
-               ? "Table__pageButton Table__pageButton--active"
-               : "Table__pageButton"
-           }
-           onClick={this.changePage.bind(null, page)}
-         >
-           {array[index - 1] + 2 < page ? `...${page}` : page}
-         </PageButtonComponent>
-       );
-     })}
-     </div>
-     <div className="Table__nextPageWrapper">
-     <PageButtonComponent
-     className="Table__pageButton"
-     onClick={() => {
-              if (activePage === this.props.pages) return;
-              this.changePage(activePage + 1);
-            }}
-     disabled={activePage === this.props.pages}
-     >
-     {this.props.nextText}
-     </PageButtonComponent>
-     </div>
-     </div>
-     */
   }
 }
+
+export default Pagination;

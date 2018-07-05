@@ -4,10 +4,10 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { setAllCustomerRequests } from '../../actions';
+import { setAllCustomerRequests } from '../../store/actions';
 
 import store from '../../store';
-import { loadTableState, saveTableState } from "../../misc";
+import { loadTableState, saveTableState } from "../../misc/tools";
 
 const prefix = 'allCustomers';
 const ReactTable = ReactTableBla.default;
@@ -77,7 +77,7 @@ const requestData = (pageSize, page, sorted, filtered) => {
   });
 };
 
-export default class AllCustomerRequestsTable extends Component {
+class AllCustomerRequestsTable extends Component {
   state = {
     page: 0,
     pageSize: 50,
@@ -89,6 +89,7 @@ export default class AllCustomerRequestsTable extends Component {
   };
 
   static propTypes = {
+    translations: PropTypes.object.isRequired,
     displayedCustomerRequests: PropTypes.array,
   };
 
@@ -221,3 +222,5 @@ export default class AllCustomerRequestsTable extends Component {
     );
   }
 }
+
+export default AllCustomerRequestsTable;

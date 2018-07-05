@@ -4,15 +4,16 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import _ from 'lodash';
-import xss from 'xss';
+import { inspect } from 'util';
+import serialize from 'serialize-javascript';
 
 import Bool from '../containers/table/cells/BoolContainer';
 import ResetButton from '../containers/table/ResetButtonContainer';
-import TableTHead from './table/TableTHead';
-import SortableHeader from './table/SortableHeader';
+import TableTHead from '../containers/table/TableTHeadContainer';
+import SortableHeader from '../containers/table/SortableHeaderContainer';
 import Loading from './misc/Loading';
-import Pagination from './table/Pagination';
-import { setAllCustomerRequests } from '../../actions';
+import Pagination from '../containers/table/PaginationContainer';
+import { setAllCustomerRequests } from '../../store/actions';
 
 import { getSort, loadTableState, saveTableState } from '../../misc/tools';
 import { DEFAULT_ROW_SELECT, TABLE_BOOL, TABLE_EMAIL_HEX } from '../../misc/consts';
@@ -23,64 +24,65 @@ const prefix = 'allCustomers';
 let pendingRequests = [];
 const prevState = loadTableState(prefix);
 
-const requestData = (pageSize, page, sorted, filtered) => {
-  return new Promise((resolve, reject) => {
-    _.forEach(pendingRequests, (source) => {
+/**
+ * Request data
+ *
+ * @param {number} pageSize
+ * @param {number} page
+ * @param {Array}  sorted
+ * @param {Array}  filtered
+ *
+ * @returns {Promise<{rows: *[], pages, page: *, rowCount}>}
+ */
+const requestData = async (pageSize, page, sorted, filtered) => {
+    _.forEach(pendingRequests, async (source) => {
       source.cancel();
     });
     pendingRequests = [];
     const source = axios.CancelToken.source();
     pendingRequests.push(source);
-    axios.post(`${window.TbGdprModule.urls.ajax}&ajax=1&action=RetrieveCustomerRequests`, {
+    const { data: { data, pages, rowCount, success } } = await axios.post(`${window.TbGdprModule.urls.ajax}&ajax=1&action=RetrieveCustomerRequests`, {
       page,
       pageSize,
       sorted,
       filtered,
     }, {
       cancelToken: source.token,
-    })
-      .then(({ data: response, data: { data, pages, rowCount } }) => {
-        store.dispatch(setAllCustomerRequests(data));
-        let filteredData = data;
-        if (filtered.length) {
-          filteredData = filtered.reduce((filteredSoFar, nextFilter) => {
-            return filteredSoFar.filter(row => {
-              return (row[nextFilter.id] + '').includes(nextFilter.value);
-            });
-          }, filteredData);
-        }
+    });
+    store.dispatch(setAllCustomerRequests(data));
+    let filteredData = data;
+    if (filtered.length) {
+      filteredData = filtered.reduce((filteredSoFar, nextFilter) => {
+        return filteredSoFar.filter(row => {
+          return (row[nextFilter.id] + '').includes(nextFilter.value);
+        });
+      }, filteredData);
+    }
 
-        const sortedData = _.orderBy(
-          filteredData,
-          sorted.map(sort => {
-            return row => {
-              if (row[sort.id] === null || row[sort.id] === undefined) {
-                return -Infinity;
-              }
-              return typeof row[sort.id] === 'string'
-                ? row[sort.id].toLowerCase()
-                : row[sort.id];
-            };
-          }),
-          sorted.map(d => (d.desc ? 'desc' : 'asc'))
-        );
-
-        const res = {
-          rows: sortedData.slice(pageSize * page, pageSize * page + pageSize),
-          pages: pages,
-          page,
-          rowCount,
+    const sortedData = _.orderBy(
+      filteredData,
+      sorted.map(sort => {
+        return row => {
+          if (row[sort.id] === null || row[sort.id] === undefined) {
+            return -Infinity;
+          }
+          return typeof row[sort.id] === 'string'
+            ? row[sort.id].toLowerCase()
+            : row[sort.id];
         };
-        resolve(res);
-      })
-      .catch((err) => {
-        reject(err);
-      })
-    ;
-  });
+      }),
+      sorted.map(d => (d.desc ? 'desc' : 'asc'))
+    );
+
+    return {
+      rows: sortedData.slice(pageSize * page, pageSize * page + pageSize),
+      pages: pages,
+      page,
+      rowCount,
+    };
 };
 
-export default class AllCustomerRequestsTable extends Component {
+class AllCustomerRequestsTable extends Component {
   state = {
     pages: 0,
     rowCount: 0,
@@ -99,7 +101,14 @@ export default class AllCustomerRequestsTable extends Component {
     return !_.isEmpty(nextProps.translations);
   }
 
-  fetchData = (state) => {
+  /**
+   * Fetch data
+   *
+   * @param {Object} state
+   *
+   * @returns {Promise<void>}
+   */
+  fetchData = async (state) => {
     const { pageSize, page, sorted, filtered } = state;
 
     saveTableState(prefix, {
@@ -109,28 +118,28 @@ export default class AllCustomerRequestsTable extends Component {
     });
 
     this.setState({
-     loading: true,
+      loading: true,
     });
-    requestData(
-      pageSize,
-      page,
-      sorted,
-      filtered
-    )
-      .then(res => {
-        this.setState({
-          pages: res.pages,
-          page: res.page,
-          rowCount: res.rowCount,
-          loading: false
-        });
-      })
-      .catch(() => {
-        this.setState({
-          loading: false,
-        });
-      })
-    ;
+
+    try {
+      const res = await requestData(
+        pageSize,
+        page,
+        sorted,
+        filtered
+      );
+      this.setState({
+        pages: res.pages,
+        page,
+        rowCount: res.rowCount,
+        loading: false
+      });
+    } catch (e) {
+      this.setState({
+        loading: false,
+      });
+      console.error(e);
+    }
   };
 
   injectThead = ({ toggleSort, className, children, ...rest }) => {
@@ -171,7 +180,7 @@ export default class AllCustomerRequestsTable extends Component {
     const { displayedCustomerRequests, translations } = this.props;
     const { pages, loading, sorted, filtered, rowCount } = this.state;
 
-    if (!Array.isArray(displayedCustomerRequests)) {
+    if (!_.isArray(displayedCustomerRequests)) {
       return null;
     }
 
@@ -205,7 +214,7 @@ export default class AllCustomerRequestsTable extends Component {
             style={{ width: '100%' }}
             value={_.get(filter, 'value.value', '') + ''}
           />,
-        Cell: props => <kbd>{xss(props.value)}</kbd>,
+        Cell: props => <kbd>{props.value}</kbd>,
         style: {
           cursor: 'pointer',
         }
@@ -229,8 +238,8 @@ export default class AllCustomerRequestsTable extends Component {
             value={filter ? filter.value.value : 'all'}
           >
             <option value="all">--</option>
-            <option value="true">{xss(translations.yes)}</option>
-            <option value="false">{xss(translations.no)}</option>
+            <option value="true">{translations.yes}</option>
+            <option value="false">{translations.no}</option>
           </select>,
         Cell: props => <Bool enabled={!!parseInt(props.value, 10)} style={{ cursor: 'pointer' }}/>,
         style: {
@@ -295,3 +304,5 @@ export default class AllCustomerRequestsTable extends Component {
     );
   }
 }
+
+export default AllCustomerRequestsTable;

@@ -2,10 +2,8 @@
 CWD_BASENAME=${PWD##*/}
 CWD_BASEDIR=${PWD}
 echo ${CWD_BASEDIR}
-BUILD_HASH="$(openssl rand -hex 8)"
 echo "Building the GDPR module"
 echo "Create packaging directory"
-echo "Build hash: ${BUILD_HASH}"
 
 # Cleanup before scoping
 rm pre-scoper/ -rf
@@ -41,15 +39,10 @@ fi
 rm -rf ${DIR}/${CWD_BASENAME}/views/js/dist/
 NODE_ENV=production webpack --mode production
 cp ${DIR}/${CWD_BASENAME}/views/js/index.php ${DIR}/${CWD_BASENAME}/views/js/dist/index.php
-cp ${DIR}/${CWD_BASENAME}/views/js/dist/export-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/dist/export-${BUILD_HASH}.bundle.min.js
-cp ${DIR}/${CWD_BASENAME}/views/js/dist/requests-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/dist/requests-${BUILD_HASH}.bundle.min.js
-cp ${DIR}/${CWD_BASENAME}/views/js/dist/translations-__BUILD_HASH__.bundle.min.js ${DIR}/${CWD_BASENAME}/views/js/dist/translations-${BUILD_HASH}.bundle.min.js
 
 cd ${DIR}/${CWD_BASENAME}
 
 # Zip file
-find . -type f -name '*.php' -exec sed -i "s/__BUILD_HASH__/${BUILD_HASH}/g" {} \;
-find . -type f -name '*.tpl' -exec sed -i "s/__BUILD_HASH__/${BUILD_HASH}/g" {} \;
 
 FILES+=("logo.gif")
 FILES+=("logo.png")
@@ -74,9 +67,9 @@ FILES+=("views/index.php")
 FILES+=("views/js/index.php")
 FILES+=("views/js/index.php")
 FILES+=("views/js/dist/index.php")
-FILES+=("views/js/dist/export-${BUILD_HASH}.bundle.min.js")
-FILES+=("views/js/dist/requests-${BUILD_HASH}.bundle.min.js")
-FILES+=("views/js/dist/translations-${BUILD_HASH}.bundle.min.js")
+FILES+=("views/js/dist/export.bundle.min.js")
+FILES+=("views/js/dist/requests.bundle.min.js")
+FILES+=("views/js/dist/translations.bundle.min.js")
 FILES+=("views/templates/**")
 
 MODULE_VERSION="$(sed -ne "s/\\\$this->version *= *['\"]\([^'\"]*\)['\"] *;.*/\1/p" ${CWD_BASENAME}.php)"

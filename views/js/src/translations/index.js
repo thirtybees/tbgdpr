@@ -1,4 +1,4 @@
-import { setTranslations } from '../actions';
+import { setTranslations } from '../store/actions';
 import getStore from '../store';
 const store = getStore();
 

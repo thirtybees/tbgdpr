@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -19,7 +20,7 @@ export default class AllCustomerRequests {
     const self = this;
     if (typeof window.IntersectionObserver !== 'undefined') {
       const observer = new IntersectionObserver((changes) => {
-        changes.forEach((change) => {
+        _.forEach(changes, (change) => {
           if (change.intersectionRatio > 0) {
             self.initRender();
             observer.disconnect();

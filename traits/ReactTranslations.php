@@ -36,19 +36,21 @@ trait ReactTranslations
     public function getReactTranslations()
     {
         return [
-            'next'        => $this->l('Next', 'ReactTranslations'),
-            'previous'    => $this->l('Previous', 'ReactTranslations'),
-            'loading'     => $this->l('Loading', 'ReactTranslations'),
-            'noRowsFound' => $this->l('No rows found', 'ReactTranslations'),
-            'page'        => $this->l('Page', 'ReactTranslations'),
-            'of'          => $this->l('of', 'ReactTranslations'),
-            'yes'         => $this->l('Yes', 'ReactTranslations'),
-            'no'          => $this->l('No', 'ReactTranslations'),
-            'visitor'     => $this->l('Visitor', 'ReactTranslations'),
-            'executed'    => $this->l('Executed', 'ReactTranslations'),
-            'dateAdded'   => $this->l('Date Added', 'ReactTranslations'),
-            'ID'          => $this->l('ID', 'ReactTranslations'),
-            'reset'       => $this->l('Reset', 'ReactTranslations'),
+            'next'              => $this->l('Next', 'ReactTranslations'),
+            'previous'          => $this->l('Previous', 'ReactTranslations'),
+            'loading'           => $this->l('Loading', 'ReactTranslations'),
+            'noRowsFound'       => $this->l('No rows found', 'ReactTranslations'),
+            'page'              => $this->l('Page', 'ReactTranslations'),
+            'of'                => $this->l('of', 'ReactTranslations'),
+            'yes'               => $this->l('Yes', 'ReactTranslations'),
+            'no'                => $this->l('No', 'ReactTranslations'),
+            'visitor'           => $this->l('Visitor', 'ReactTranslations'),
+            'executed'          => $this->l('Executed', 'ReactTranslations'),
+            'dateAdded'         => $this->l('Date Added', 'ReactTranslations'),
+            'ID'                => $this->l('ID', 'ReactTranslations'),
+            'reset'             => $this->l('Reset', 'ReactTranslations'),
+            'display'           => $this->l('Display', 'ReactTranslations'),
+            'paginationResults' => $this->l('result(s)', 'ReactTranslations'),
         ];
     }
 }

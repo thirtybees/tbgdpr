@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import AllCustomerRequestsTable from '../components/AllCustomerRequestsTable';
+import SortableHeader from '../../components/table/SortableHeader';
 
 const mapStateToProps = (state) => {
   return {
@@ -13,9 +13,9 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const AllCustomerRequestsTableContainer = connect(
+const SortableHeaderContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(AllCustomerRequestsTable);
+)(SortableHeader);
 
-export default AllCustomerRequestsTableContainer;
+export default SortableHeaderContainer;

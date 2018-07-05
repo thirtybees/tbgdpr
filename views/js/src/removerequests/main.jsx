@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -7,7 +8,7 @@ import AllCustomerRequestsTable from './containers/AllCustomerRequestsTableConta
 import store from '../store';
 
 import './css/table.css';
-import { setTranslations } from '../actions';
+import TranslationProvider from "../contexts/TranslationContext";
 
 export default class AllCustomerRequests {
   constructor(target, translations) {
@@ -18,7 +19,12 @@ export default class AllCustomerRequests {
 
     render(
       <Provider store={store}>
-        <AllCustomerRequestsTable />
+        <TranslationProvider>
+          {state => {
+          console.log(state);
+          <AllCustomerRequestsTable translations={state.translations} />
+        }}
+        </TranslationProvider>
       </Provider>,
       target
     );

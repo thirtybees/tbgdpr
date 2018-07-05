@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const production = (process.env.NODE_ENV === 'production');
 const plugins = [
@@ -11,6 +12,24 @@ const optimization = {
 };
 
 if (production) {
+  plugins.push(new LodashModuleReplacementPlugin({
+    collections: true,
+    paths: true,
+    shorthands: true,
+    cloning: true,
+    chaining: true,
+    metadata: true,
+    caching: false,
+    exotics: false,
+    guards: false,
+    deburring: false,
+    unicode: false,
+    memoizing: false,
+    coercions: false,
+    currying: false,
+    flattening: false,
+    placeholders: false,
+  }));
   optimization.minimizer.push(
     new UglifyJsPlugin({
       uglifyOptions: {
@@ -69,11 +88,14 @@ module.exports = {
     // export: [
     //   './export/main.jsx',
     // ],
+    datarequests: [
+      path.resolve(__dirname, './datarequests/main.jsx'),
+    ],
     requests: [
-      './requests/main.jsx',
+      path.resolve(__dirname, './requests/main.jsx'),
     ],
     translations: [
-      './translations/main.js',
+      path.resolve(__dirname, './translations/index.js'),
     ],
   },
   resolve: {
@@ -82,7 +104,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/assets/',
-    filename: '[name]-__BUILD_HASH__.bundle.min.js',
+    filename: '[name]-bundle.min.js',
     libraryTarget: 'var',
     library: ['TbGdprModule', '[name]'],
   },
@@ -92,13 +114,12 @@ module.exports = {
       {
         test: /\.jsx?$/,
         include: [
-          path.join(__dirname, 'actions'),
+          path.join(__dirname, 'datarequests'),
           path.join(__dirname, 'export'),
-          path.join(__dirname, 'reducers'),
           path.join(__dirname, 'requests'),
           path.join(__dirname, 'requestsbadge'),
-          path.join(__dirname, 'translations'),
           path.join(__dirname, 'store'),
+          path.join(__dirname, 'translations'),
           path.join(__dirname, 'misc'),
         ],
         exclude: path.join(__dirname, 'node_modules'),
@@ -139,6 +160,7 @@ module.exports = {
       {
         test: /\.css$/,
         include: [
+          path.join(__dirname, 'datarequests/css'),
           path.join(__dirname, 'export/css'),
           path.join(__dirname, 'requests/css'),
         ],
@@ -150,6 +172,7 @@ module.exports = {
       {
         test: /\.less$/,
         include: [
+          path.join(__dirname, 'datarequests/less'),
           path.join(__dirname, 'export/less'),
           path.join(__dirname, 'requests/less'),
         ],

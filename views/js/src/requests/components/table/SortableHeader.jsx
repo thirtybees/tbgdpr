@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import xss from 'xss';
 
 export default class SortableHeader extends React.Component {
   static propTypes = {
@@ -14,7 +13,7 @@ export default class SortableHeader extends React.Component {
 
     return (
       <span className="title_box active">
-        {xss(name)}&nbsp;
+        {name}&nbsp;
         <a
           className={sort === 'desc' ? 'active' : ''}
           style={{ cursor: 'pointer' }}

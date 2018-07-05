@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import AllCustomerRequestsTable from '../components/AllCustomerRequestsTable';
+import Pagination from '../../components/table/Pagination';
 
 const mapStateToProps = (state) => {
   return {
@@ -13,9 +13,9 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const AllCustomerRequestsTableContainer = connect(
+const PaginationContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(AllCustomerRequestsTable);
+)(Pagination);
 
-export default AllCustomerRequestsTableContainer;
+export default PaginationContainer;
